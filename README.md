@@ -1,5 +1,5 @@
 <p align="center">
-  <img width="250" height="125" src="https://www.woosignal.com/images/woosignal_logo_stripe_blue.png" alt="Woosignal logo">
+  <img width="200" height="125" src="https://www.woosignal.com/images/woosignal_logo_stripe_blue.png" alt="Woosignal logo">
 </p>
 	
 # Woocommerce App: Label Store 
