@@ -1,5 +1,9 @@
-# Woocommerce App: Label Store  ![alt text](https://avatars0.githubusercontent.com/u/40471622?s=40&v=4 "Label Store Woocommerce Template")
-## Label Store - v1.0
+<p align="center">
+  <img width="250" height="125" src="https://www.woosignal.com/images/woosignal_logo_stripe_blue.png" alt="Woosignal logo">
+</p>
+	
+# Woocommerce App: Label Store 
+### Label Store - v1.0
 
 ![alt text](https://s3.envato.com/files/246775336/woosignal_labelpro_main_banner.png "Woosignal")
 
