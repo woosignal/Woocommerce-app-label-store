@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Bucket
+   type = "0"
+   version = "2.0">
+   <Breakpoints>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Label/HomeViewController.swift"
+            timestampString = "529269218.82536"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "102"
+            endingLineNumber = "102"
+            landmarkName = "categoryApplyChanges(_:)"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "Label.HomeViewController.categoryApplyChanges(__ObjC.UIButton) -&gt; ()"
+                  moduleName = "Label"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/user/Documents/gitproj/LabelIOS/LabelIOS/App/Label/Label/HomeViewController.swift"
+                  timestampString = "529270757.027477"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "103"
+                  endingLineNumber = "103"
+                  offsetFromSymbolStart = "1548">
+               </Location>
+               <Location
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 (Swift.Optional&lt;Swift.Array&lt;Label.storeItem&gt;&gt;) -&gt; () in Label.HomeViewController.categoryApplyChanges(__ObjC.UIButton) -&gt; ()"
+                  moduleName = "Label"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/user/Documents/gitproj/LabelIOS/LabelIOS/App/Label/Label/HomeViewController.swift"
+                  timestampString = "529270757.029555"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "104"
+                  endingLineNumber = "104"
+                  offsetFromSymbolStart = "18">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+   </Breakpoints>
+</Bucket>
