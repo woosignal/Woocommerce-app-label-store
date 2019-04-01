@@ -11,9 +11,8 @@
 
 Label is a WooCommerce IOS App template, built exclusively for online shopping and it offers a great variety of options to customise the look and feel of the App. Label supports product views, multi-variation products, category searches + more.
 
-1. Free to use
-2. Supports the latest Woocommerce (2.6+)
-3. [Documentation available](https://woosignal.com/docs/ios/labelpro)
+1. Supports the latest WooCommerce (2.6+)
+2. [Documentation available](https://woosignal.com/docs/ios/labelpro)
 
 ![alt text](https://woosignal.com/images/labelstore_demo_ios.gif "Woocommerce App Screenshot")
 
