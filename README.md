@@ -3,9 +3,9 @@
 </p>
 	
 # Woocommerce App: Label Store 
-### Label Store - v1.0
+### Label Store - v2.1
 
-![alt text](https://s3.envato.com/files/246775336/woosignal_labelpro_main_banner.png "Woosignal")
+![alt text](https://woosignal.com/images/woosignal_labelpro_main_banner_ios.png "Woosignal WooCommerce app template")
 
 ### About Label Store
 

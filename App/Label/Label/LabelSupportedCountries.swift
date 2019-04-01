@@ -12,7 +12,18 @@ import Foundation
  SUPPORTED COUNTRIES
  
  You can alter the below results to change which countries which are displayed to the user.
+ 
+ Example below:
+ - BEFORE
+ ["code":"GB", "name":"United Kingdom"],
+ ["code":"US", "name":"United States"],
+ ["code":"AE", "name":"United Arab Emirates"],
+ 
+ - AFTER
+ ["code":"GB", "name":"United Kingdom"],
+ 
  */
+
 struct LabelCountries {
     let countries = [
         ["code":"GB", "name":"United Kingdom"],

@@ -21,19 +21,20 @@ import PassKit
 
 class OrderConfirmationSetViewController: ParentLabelVC, LabelBootstrap {
     
-    var didPresentedPayPal:Bool! = false
+    var hasOpenedView:Bool! = false
     var isLoggedIn:Bool! = false
     var oShippingAddress:labelShippingAddress!
     var basket:[sBasket]! = []
     var oOrder:orderCore!
     var taxes:[LabelTaxes]! = []
+    var activePaymentMethod:PaymentMethodType!
     
     var labelShippings:[LabelShipping]? = []
     var activeShipping:LabelShipping!
     var activeMethod:LabelShippingMethod? = nil
     var remeberShippingDetails:Bool! = true
     
-    var environment:String = PayPalEnvironmentNoNetwork {
+    var environment:String = labelCore().paypalEnvironment {
         willSet(newEnvironment) {
             if (newEnvironment != environment) {
                 PayPalMobile.preconnect(withEnvironment: newEnvironment)
@@ -41,8 +42,7 @@ class OrderConfirmationSetViewController: ParentLabelVC, LabelBootstrap {
         }
     }
     
-    var payPalConfig = PayPalConfiguration() // default
-    var paymentMethod:String! = ""
+    var payPalConfig = PayPalConfiguration()
     
     // MARK: IB
     @IBOutlet weak var btnPayment: UIButton!
@@ -54,20 +54,14 @@ class OrderConfirmationSetViewController: ParentLabelVC, LabelBootstrap {
     @IBOutlet weak var lblSubtotal: UILabel!
     @IBOutlet weak var lblDeliveryPrice: UILabel!
     @IBOutlet weak var lblTotal: UILabel!
-    @IBOutlet weak var viewPaypal: UIView!
-    @IBOutlet weak var viewStripe: UIView!
-    @IBOutlet weak var viewApplePay: UIView!
     @IBOutlet weak var viewContainerProcessLoader: UIView!
     @IBOutlet weak var viewContainerProcessActivityLoader: UIView!
     @IBOutlet weak var viewContainerActivity: UIView!
-    @IBOutlet weak var viewApplePayBtn: UIView!
-    @IBOutlet weak var viewCashOnDelivery: UIView!
     @IBOutlet weak var lblTextProcessing: UILabel!
     @IBOutlet weak var btnCancelShipping: UIButton!
     @IBOutlet weak var lblTextCartTotals: UILabel!
     @IBOutlet weak var lblTextSelectShipping: UILabel!
     @IBOutlet weak var lblTextChoose: UILabel!
-    @IBOutlet weak var lblTextPaymentMethod: UILabel!
     @IBOutlet weak var lblTextShippingAddress: UILabel!
     @IBOutlet weak var lblTextPhoneNumber: UILabel!
     @IBOutlet weak var lblTextEmailAddress: UILabel!
@@ -83,6 +77,25 @@ class OrderConfirmationSetViewController: ParentLabelVC, LabelBootstrap {
     @IBOutlet weak var viewContainerShipping: SpringView!
     @IBOutlet weak var lblTextShippingTitle: UILabel!
     @IBOutlet weak var tvShippings: UITableView!
+    @IBOutlet weak var tvPaymentMethods: UITableView!
+    @IBOutlet weak var viewContainerApplePay: UIView!
+    @IBOutlet weak var lblTextPaymentMethods: UILabel!
+    @IBOutlet weak var btnPaymentMethodCancel: UIButton!
+    @IBOutlet weak var ivActivePaymentMethod: UIImageView!
+    @IBOutlet weak var lblActivePaymentMethod: UILabel!
+    @IBOutlet weak var viewContainerPaymentMethods: SpringView!
+    
+    @IBOutlet weak var lblTextPayWith: UILabel!
+    
+    @IBAction func payWithTapped(_ sender: UIButton) {
+        self.viewContainerPaymentMethods.animation = "fadeIn"
+        self.viewContainerPaymentMethods.animate()
+    }
+    
+    @IBAction func dismissPaymentMethodView(_ sender: UIButton) {
+        self.viewContainerPaymentMethods.animation = "fadeOut"
+        self.viewContainerPaymentMethods.animate()
+    }
     
     var activeShippingMethods:[LabelShippingMethod]! = []
     
@@ -196,38 +209,6 @@ class OrderConfirmationSetViewController: ParentLabelVC, LabelBootstrap {
         performSegue(withIdentifier: "segueShippingView", sender: self)
     }
     
-    /*
-     @paymentMethod
-     1 = ApplePay
-     2 = Stripe
-     3 = Paypal
-     4 = Cash On Delivery
-     */
-    
-    @IBAction func selectApplePayPayment(_ sender: UIButton) {
-        PaymentMethodBorder(index: 1)
-        paymentMethod = "1"
-        self.view.endEditing(true)
-    }
-    
-    @IBAction func selectStripePayment(_ sender: UIButton) {
-        PaymentMethodBorder(index: 2)
-        paymentMethod = "2"
-        self.view.endEditing(true)
-    }
-    
-    @IBAction func selectPayPalPayment(_ sender: UIButton) {
-        PaymentMethodBorder(index: 3)
-        paymentMethod = "3"
-        self.view.endEditing(true)
-    }
-    
-    @IBAction func selectCashOnDeliveryPayment(_ sender: UIButton) {
-        PaymentMethodBorder(index: 4)
-        paymentMethod = "4"
-        self.view.endEditing(true)
-    }
-    
     // MARK: CONTINUE PAYMENT
     
     @IBAction func continuePayment(_ sender: UIButton) {
@@ -252,10 +233,7 @@ class OrderConfirmationSetViewController: ParentLabelVC, LabelBootstrap {
             return
         }
         
-        // PAYMENT METHODS
-        if paymentMethod == "" {
-            LabelAlerts().openWarning(title: NSLocalizedString("Oops...text", comment: "Oops.. (Text)"), desc: NSLocalizedString("Please ensure that you have selected a payment method!.text", comment: "Alert (Text)"), vc: self)
-        } else {
+        
             
             if remeberShippingDetails {
                 let user:sUser! = sUser(first_name: self.tfFirstName.text ?? "", last_name: self.tfLastName.text ?? "", email: self.tfEmail.text ?? "", phone: tfPhoneNumber.text ?? "")
@@ -265,10 +243,6 @@ class OrderConfirmationSetViewController: ParentLabelVC, LabelBootstrap {
                 sDefaults().setRememberDetails(set: false)
                 sDefaults().removeUserOrderDetails()
             }
-            
-            if paymentMethod == "" {
-                LabelAlerts().openWarning(title: NSLocalizedString("Oops...text", comment: "Oops.. (Text)"), desc: NSLocalizedString("Please ensure that you have selected a payment method!.text", comment: "Alert (Text)"), vc: self)
-            } else {
                 
                 if remeberShippingDetails {
                     let user:sUser! = sUser(first_name: self.tfFirstName.text ?? "", last_name: self.tfLastName.text ?? "", email: self.tfEmail.text ?? "", phone: tfPhoneNumber.text ?? "")
@@ -279,49 +253,43 @@ class OrderConfirmationSetViewController: ParentLabelVC, LabelBootstrap {
                     sDefaults().removeUserOrderDetails()
                 }
                 
-                switch paymentMethod {
-                case "1":
-                    if labelCore().merchantID == "" {
-                        LabelAlerts().openWarning(title: NSLocalizedString("This payment option is not available.text", comment: "This payment option is not available (Text)"), desc: NSLocalizedString("PaE-27-TJR.text", comment: "Please try again later (Text)"), vc: self)
-                        
-                        LabelLog().output(log: "DEVELOPER CHECK \"LabelCore.swift\" AND ENSURE THAT THE \"merchantID\" is set as Apple pay will not work without this.")
-                        return
-                    }
-                    
-                    applePayBuy()
-                    break
-                    
-                case "2":
-                    if labelCore().stripePublishable == "" {
-                        LabelAlerts().openWarning(title: NSLocalizedString("This payment option is not available.text", comment: "This payment option is not available (Text)"), desc: NSLocalizedString("PaE-27-TJR.text", comment: "Please try again later (Text)"), vc: self)
-                        
-                        LabelLog().output(log: "DEVELOPER CHECK \"LabelCore.swift\" SETUP.")
-                        return
-                    }
-                    
-                    stripeBuy()
-                    break
-                    
-                case "3":
-                    if labelCore().paypalClientID == "" || labelCore().paypalSecret == "" {
-                        LabelAlerts().openWarning(title: NSLocalizedString("This payment option is not available.text", comment: "This payment option is not available (Text)"), desc: NSLocalizedString("PaE-27-TJR.text", comment: "Please try again later (Text)"), vc: self)
-                        
-                        LabelLog().output(log: "DEVELOPER CHECK \"LabelCore.swift\" AND ENSURE THAT THE \"paypalClientID & paypalSecret\" are set.")
-                        return
-                    }
-                    paypalBuy()
-                    break
-                    
-                case "4":
-                    cashBuy()
-                    break
-                    
-                default:
-                    LabelAlerts().openWarning(title: NSLocalizedString("Oops...text", comment: "Oops.. (Text)"), desc: NSLocalizedString("Please ensure that you have selected a payment method!.text", comment: "Alert (Text)"), vc: self)
-                    break
-                }
+        switch activePaymentMethod.getPaymentMethod().id {
+        case 1:
+            // APPLE PAY
+            if labelCore().stripePublishable == "" || labelCore().merchantID == "" {
+                LabelAlerts().openWarning(title: NSLocalizedString("This payment option is not available.text", comment: "This payment option is not available (Text)"), desc: NSLocalizedString("PaE-27-TJR.text", comment: "Please try again later (Text)"), vc: self)
+                
+                LabelLog().output(log: "DEVELOPER CHECK \"LabelCore.swift\" AND ENSURE THAT THE \"merchantID\" and \"stripePublishable\" is set as Apple pay will not work without this.")
+                return
             }
+            applePayBuy()
+            break
+        case 2:
+            // PAYPAL
+            if labelCore().paypalClientID == "" || labelCore().paypalSecret == "" {
+                LabelAlerts().openWarning(title: NSLocalizedString("This payment option is not available.text", comment: "This payment option is not available (Text)"), desc: NSLocalizedString("PaE-27-TJR.text", comment: "Please try again later (Text)"), vc: self)
+                
+                LabelLog().output(log: "DEVELOPER CHECK \"LabelCore.swift\" AND ENSURE THAT THE \"paypalClientID & paypalSecret\" are set.")
+                return
+            }
+            paypalBuy()
+            break
+        case 3:
+            // STRIPE
+            if labelCore().stripePublishable == "" {
+                LabelAlerts().openWarning(title: NSLocalizedString("This payment option is not available.text", comment: "This payment option is not available (Text)"), desc: NSLocalizedString("PaE-27-TJR.text", comment: "Please try again later (Text)"), vc: self)
+                
+                LabelLog().output(log: "DEVELOPER CHECK \"LabelCore.swift\" SETUP.")
+                return
+            }
+            stripeBuy()
+            break
+        default:
+            LabelAlerts().openWarning(title: NSLocalizedString("Oops...text", comment: "Oops.. (Text)"), desc: NSLocalizedString("Please ensure that you have selected a payment method!.text", comment: "Alert (Text)"), vc: self)
+            break
         }
+            
+        
     }
     
     @IBAction func dismissVIew(_ sender: UIBarButtonItem) {
@@ -334,6 +302,11 @@ class OrderConfirmationSetViewController: ParentLabelVC, LabelBootstrap {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        self.localizeStrings()
+        
+        self.activePaymentMethod = PaymentMethodType.getAllPaymentMethods()[0]
+        self.updateUIPayWith()
         
         // START SPLASH LOADER
         self.activityLoaderSplash.startAnimating()
@@ -379,7 +352,6 @@ class OrderConfirmationSetViewController: ParentLabelVC, LabelBootstrap {
         viewContainerActivity.clipsToBounds = true
         
         self.lblDeliveryPrice.text = NSLocalizedString("Shipping: Not yet selected.text", comment: "Shipping (Text)")
-        self.viewApplePayBtn.addSubview(createApplePayBtn())
         
         if labelCore().useLabelLogin {
             if sDefaults().isLoggedIn() {
@@ -398,6 +370,8 @@ class OrderConfirmationSetViewController: ParentLabelVC, LabelBootstrap {
                 dismiss(animated: true, completion: nil)
             }
         }
+        
+        self.tryAddUserInfoToView()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -406,17 +380,31 @@ class OrderConfirmationSetViewController: ParentLabelVC, LabelBootstrap {
         
         if let data = sDefaults().pref.object(forKey: sDefaults().userAddress) as? Data {
             oShippingAddress = NSKeyedUnarchiver.unarchiveObject(with: data) as? labelShippingAddress
-            lblShippingAddress.text = oShippingAddress.opFullAddress()
+            if oShippingAddress != nil {
+                lblShippingAddress.text = oShippingAddress.opFullAddress()
+            }
         }
         
         remeberShippingDetails = true
         setRememberDetails()
+        self.tryAddUserInfoToView()
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        self.saveCurrentUserState()
         
-        // CHECKS IF STRIPE OR PAYPAL IS ENABLED
-        viewStripe.isHidden = !labelCore().useStripe
-        viewPaypal.isHidden = !labelCore().usePaypal
-        viewApplePay.isHidden = !labelCore().useApplePay
-        viewCashOnDelivery.isHidden = !labelCore().useCashOnDelivery
+        guard let paymentMethod = self.activePaymentMethod else {
+            return
+        }
+        switch paymentMethod {
+        case .stripe:
+            fallthrough
+        case .paypal:
+            hasOpenedView = true
+        default:
+            break
+        }
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -424,13 +412,15 @@ class OrderConfirmationSetViewController: ParentLabelVC, LabelBootstrap {
         
         if let data = sDefaults().pref.object(forKey: sDefaults().userAddress) as? Data {
             oShippingAddress = NSKeyedUnarchiver.unarchiveObject(with: data) as? labelShippingAddress
-            lblShippingAddress.text = oShippingAddress.opFullAddress()
+            if oShippingAddress != nil {
+                lblShippingAddress.text = oShippingAddress.opFullAddress()
+            }
         }
         
         remeberShippingDetails = true
         setRememberDetails()
         activeShippingMethods = []
-        if !didPresentedPayPal {
+        if !hasOpenedView {
             activeMethod = nil
         }
         resetShippingView()
@@ -439,6 +429,25 @@ class OrderConfirmationSetViewController: ParentLabelVC, LabelBootstrap {
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
+    }
+    
+    func tryAddUserInfoToView() {
+        if let userApp = sDefaults().getAppUser() {
+            self.tfFirstName.text = userApp.firstName
+            self.tfLastName.text = userApp.lastName
+            self.tfEmail.text = userApp.email
+            self.tfPhoneNumber.text = userApp.telephone
+        }
+    }
+    
+    func saveCurrentUserState() {
+        var tmpAppUser:AppUser! = AppUser()
+        tmpAppUser.firstName = self.tfFirstName.text
+        tmpAppUser.lastName = self.tfLastName.text
+        tmpAppUser.email = self.tfEmail.text
+        tmpAppUser.telephone = self.tfPhoneNumber.text
+        
+        sDefaults().setAppUser(user: tmpAppUser)
     }
     
     func setRememberDetails() {
@@ -548,9 +557,10 @@ class OrderConfirmationSetViewController: ParentLabelVC, LabelBootstrap {
     
     func applePayBuy() {
         
-        // BUILD APPLE PAY REQUEST
-        let request = PKPaymentRequest()
+        let merchantIdentifier = labelCore().merchantID
+        let request = Stripe.paymentRequest(withMerchantIdentifier: merchantIdentifier!, country: labelCore().applePayCountryCode, currency: labelCore().applePayCurrencyCode)
         
+        // BUILD APPLE PAY REQUEST
         request.merchantIdentifier = labelCore().merchantID
         request.merchantCapabilities = PKMerchantCapability.capability3DS
         request.countryCode = labelCore().applePayCountryCode
@@ -574,8 +584,17 @@ class OrderConfirmationSetViewController: ParentLabelVC, LabelBootstrap {
         
         var summaryItems:[PKPaymentSummaryItem]! = [PKPaymentSummaryItem]()
         
+        var totalAmount:NSDecimalNumber! = NSDecimalNumber.zero
+        
         let basketTotalAmount = self.oAwCore.woBasketTotal(sBasket: self.basket, usePriceFormatter: false)
-        if basketTotalAmount == "0.00" {
+        
+        let doubleTotal = Double(basketTotalAmount) ?? 0
+        
+        summaryItems.append(PKPaymentSummaryItem(label: NSLocalizedString("Subtotal.text", comment: "Subtotal"), amount: NSDecimalNumber(value: doubleTotal)))
+        
+        totalAmount = totalAmount.adding(NSDecimalNumber(value: doubleTotal))
+        
+        if basketTotalAmount == "0.00" || basketTotalAmount == "" {
             LabelAlerts().openMoreInfo(title: NSLocalizedString("Oops!.text", comment: "Oops! (Text)"), desc: NSLocalizedString("PaE-27-TJR.text", comment: "Please try again later (Text)"), vc: self)
             return
         }
@@ -586,32 +605,42 @@ class OrderConfirmationSetViewController: ParentLabelVC, LabelBootstrap {
         
         let shippingTotal = Double(dictShipping["total"] as! String)
         
-        if shippingTotal != 0.00 {
+        if shippingTotal != nil && shippingTotal != 0.00 {
+            
             let shippingPrice: NSDecimalNumber = NSDecimalNumber(string: (dictShipping["total"] as! String))
             summaryItems.append(PKPaymentSummaryItem(label: (dictShipping["title"] as? String)!, amount: shippingPrice))
+            
+            totalAmount = totalAmount.adding(shippingPrice)
         }
         
         // ASSIGN TAX
         if !getTaxTotal().isEmpty {
-                let taxJSON = getTaxTotal()
+            let taxJSON = getTaxTotal()
             if taxJSON["total"].string != "0.0" {
+                
                 let taxPrice = NSDecimalNumber(string: taxJSON["total"].string)
                 summaryItems.append(PKPaymentSummaryItem(label: taxJSON["name"].string!, amount: taxPrice))
+                
+                totalAmount = totalAmount.adding(taxPrice)
             }
         }
         
-        let tmpTotalAmount = NSDecimalNumber(string: basketTotalAmount)
-        let tmpPaymentTotal = PKPaymentSummaryItem(label: NSLocalizedString("Total.text", comment: "Total (Text)"), amount: tmpTotalAmount)
+        let tmpPaymentTotal = PKPaymentSummaryItem(label: labelCore().storeName, amount: totalAmount)
         
         summaryItems.append(tmpPaymentTotal)
         
         request.paymentSummaryItems = summaryItems
         
-        let applePayController = PKPaymentAuthorizationViewController(paymentRequest: request)
-        
-        applePayController.delegate = self
-        
-        self.present(applePayController, animated: true, completion: nil)
+        if Stripe.canSubmitPaymentRequest(request) {
+            
+            let paymentAuthorizationViewController = PKPaymentAuthorizationViewController(paymentRequest: request)
+            paymentAuthorizationViewController.delegate = self
+            
+            present(paymentAuthorizationViewController, animated: true)
+        } else {
+            self.present(LabelAlerts().openDefaultError(), animated: true, completion: nil)
+            LabelLog().output(log: "Check LabelCore conf, problem with Apple Pay configuration")
+        }
     }
     
     func getShipping(method:LabelShippingMethod) -> NSMutableDictionary {
@@ -647,11 +676,23 @@ class OrderConfirmationSetViewController: ParentLabelVC, LabelBootstrap {
     
     func createApplePayBtn() -> PKPaymentButton {
         
-        let button:PKPaymentButton! = PKPaymentButton(type: labelCore().applePayButtonType, style: labelCore().applePayButtonStyle)
+        var button:PKPaymentButton!
         
-        button.frame = viewApplePayBtn.getFrameButton()
+        if   PKPaymentAuthorizationViewController.canMakePayments(usingNetworks: labelCore().supportedPaymentNetworks) {
+            button = PKPaymentButton(paymentButtonType: labelCore().applePayButtonType, paymentButtonStyle: labelCore().applePayButtonStyle)
+        } else {
+            button = PKPaymentButton(paymentButtonType: .setUp, paymentButtonStyle: labelCore().applePayButtonStyle)
+        }
+        
+        button.frame = CGRect(x: 0, y: 0, width: viewContainerApplePay.frame.size.width, height: viewContainerApplePay.frame.size.height)
+        
+        button.addTarget(self, action: #selector(continuePayment), for: .touchUpInside)
         
         return button
+    }
+    
+    override func viewWillLayoutSubviews() {
+        self.viewContainerApplePay.addSubview(createApplePayBtn())
     }
     
     func updateOrder() {
@@ -678,6 +719,8 @@ class OrderConfirmationSetViewController: ParentLabelVC, LabelBootstrap {
         self.tfPhoneNumber.delegate = self
         self.tvShippings.delegate = self
         self.tvShippings.dataSource = self
+        self.tvPaymentMethods.delegate = self
+        self.tvPaymentMethods.dataSource = self
     }
     
     // MARK: PAYPAL BUY
@@ -730,7 +773,7 @@ class OrderConfirmationSetViewController: ParentLabelVC, LabelBootstrap {
         
         if (payment.processable) {
             let paymentViewController = PayPalPaymentViewController(payment: payment, configuration: payPalConfig, delegate: self)
-            didPresentedPayPal = true
+            hasOpenedView = true
             present(paymentViewController!, animated: true, completion: nil)
         }
         else {
@@ -826,42 +869,8 @@ class OrderConfirmationSetViewController: ParentLabelVC, LabelBootstrap {
         addCardViewController.delegate = self
         
         let navigationController = UINavigationController(rootViewController: addCardViewController)
+        addCardViewController.title = NSLocalizedString("pay.text", comment: "Pay")
         self.present(navigationController, animated: true, completion: nil)
-    }
-    
-    func PaymentMethodBorder(index:Int) {
-        removePaymentBorder()
-        if index == 1 {
-            viewApplePay.layer.borderWidth = 1
-            viewApplePay.layer.borderColor = UIColor.darkGray.cgColor
-            viewApplePay.clipsToBounds = true
-        } else if index == 2 {
-            viewStripe.layer.borderWidth = 1
-            viewStripe.layer.borderColor = UIColor.darkGray.cgColor
-            viewStripe.clipsToBounds = true
-        } else if index == 3 {
-            viewPaypal.layer.borderWidth = 1
-            viewPaypal.layer.borderColor = UIColor.darkGray.cgColor
-            viewPaypal.clipsToBounds = true
-        } else if index == 4 {
-            viewCashOnDelivery.layer.borderWidth = 1
-            viewCashOnDelivery.layer.borderColor = UIColor.darkGray.cgColor
-            viewCashOnDelivery.clipsToBounds = true
-        }
-    }
-    
-    func removePaymentBorder() {
-        viewPaypal.layer.borderWidth = 0
-        viewPaypal.layer.borderColor = UIColor.clear.cgColor
-        
-        viewStripe.layer.borderWidth = 0
-        viewStripe.layer.borderColor = UIColor.clear.cgColor
-        
-        viewApplePay.layer.borderWidth = 0
-        viewApplePay.layer.borderColor = UIColor.clear.cgColor
-        
-        viewCashOnDelivery.layer.borderWidth = 0
-        viewCashOnDelivery.layer.borderColor = UIColor.clear.cgColor
     }
     
     // MARK: LOADER
@@ -900,7 +909,6 @@ class OrderConfirmationSetViewController: ParentLabelVC, LabelBootstrap {
         self.lblTextSelectShipping.text = NSLocalizedString("MDY-xd-Ssd.text", comment: "Order Confirmation (UILabel)")
         self.lblTextChoose.text = NSLocalizedString("MSY-xd-Ssd.text", comment: "Choose (UILabel)")
         
-        self.lblTextPaymentMethod.text = NSLocalizedString("p3r-tE-7RK.text", comment: "Payment Method (UILabel)")
         self.lblTextShippingAddress.text = NSLocalizedString("BaE-o7-TJR.text", comment: "Shipping Address (UILabel)")
         self.lblShippingAddress.text = NSLocalizedString("jrM-cE-sP5.text", comment: "Add Address (UILabel)")
         
@@ -910,6 +918,30 @@ class OrderConfirmationSetViewController: ParentLabelVC, LabelBootstrap {
         self.lblTextFirstName.text = NSLocalizedString("jEF-GF-A1S.text", comment: "First Name (UILabel)")
         
         self.btnPayment.setTitle(NSLocalizedString("u7I-h9-UQ3.normalTitle", comment: "Continue to payment (UIButton)"), for: .normal)
+        
+        lblTextPaymentMethods.text = NSLocalizedString("Payment Methods.text", comment: "Payment Methods")
+        btnPaymentMethodCancel.setTitle(NSLocalizedString("Cancel.text", comment: "Cancel"), for: .normal)
+        self.lblTextPayWith.text = NSLocalizedString("p3r-tE-7RK.text", comment: "Pay with")
+    }
+    
+    func updateUIPayWith() {
+        self.lblActivePaymentMethod.text = self.activePaymentMethod.getPaymentMethod().title
+        self.ivActivePaymentMethod.image = UIImage(named: self.activePaymentMethod.getPaymentMethod().image)
+        
+        switch activePaymentMethod.getPaymentMethod().id {
+        case 1:
+            self.btnPayment.isHidden = true
+            self.viewContainerApplePay.isHidden = false
+            break
+        case 2:
+            fallthrough
+        case 3:
+            self.viewContainerApplePay.isHidden = true
+            self.btnPayment.isHidden = false
+            break
+        default:
+            break
+        }
     }
 }
 
@@ -935,21 +967,85 @@ extension OrderConfirmationSetViewController:PKPaymentAuthorizationViewControlle
     
     func paymentAuthorizationViewController(_ controller: PKPaymentAuthorizationViewController, didAuthorizePayment payment: PKPayment, completion: @escaping ((PKPaymentAuthorizationStatus) -> Void)) {
         
-        self.processTransaction(paymentType: .applePay) { (result) in
-            
-            if (result) {
-                completion(PKPaymentAuthorizationStatus.success)
-                controller.dismiss(animated: true, completion: {
-                    self.performSegue(withIdentifier: "segueOrderStatusView", sender: nil)
-                })
-                
-            } else {
-                completion(PKPaymentAuthorizationStatus.failure)
+        STPAPIClient.shared().createToken(with: payment) { (token: STPToken?, error: Error?) in
+            guard let token = token, error == nil else {
+                self.hasOpenedView = false
+                self.present(LabelAlerts().openWarningController(title: "Payment failed", desc: "Please check your details"), animated: true, completion: nil)
+                LabelLog().output(log: "Apple Pay payment failed")
+                return
             }
+            
+            var amount:String! = "0"
+            
+            amount = self.oAwCore.woBasketTotal(sBasket: self.basket,usePriceFormatter: false)
+            
+            // ASSIGN SHIPPING
+            
+            let dictShipping = self.getShipping(method: self.activeMethod!)
+            
+            let shippingTotal = Double(dictShipping["total"] as! String)
+            
+            if shippingTotal != nil && shippingTotal != 0.00 {
+                amount = String(Double(amount)! + Double(dictShipping["total"] as! String)!)
+            }
+            
+            if !self.getTaxTotal().isEmpty {
+                let taxJSON = self.getTaxTotal()
+                amount = String(Double(amount)! + Double(taxJSON["total"].stringValue)!)
+            }
+            
+            let descProds = self.oAwCore.getBasketDesc(items: self.basket)
+            
+            self.oAwCore.createStripeOrder(email: self.tfEmail.text ?? "", token: token.tokenId, amount: amount, description: descProds, completion: { response in
+                
+                if response == nil {
+                    self.hasOpenedView = false
+                    self.present(LabelAlerts().openWarningController(title: "Payment failed", desc: "Please check your details"), animated: true, completion: nil)
+                    LabelLog().output(log: "Apple Pay payment failed")
+                } else {
+                    switch response! {
+                    case "205":
+                        self.dismiss(animated: true, completion: nil)
+                        self.processTransaction(paymentType: .stripe, completion: { (result) in
+                            
+                            if (result) {
+                                self.performSegue(withIdentifier: "segueOrderStatusView", sender: self)
+                            } else {
+                                self.hasOpenedView = false
+                                LabelLog().output(log: "Order to Woocommerce failed")
+                                self.hideProcessingLoader()
+                            }
+                        })
+                    case "500":
+                        self.hasOpenedView = false
+                        self.present(LabelAlerts().openWarningController(title: "Payment failed", desc: "Please check your details"), animated: true, completion: nil)
+                        
+                        break
+                    case "402":
+                        self.hasOpenedView = false
+                        self.present(LabelAlerts().openWarningController(title: "Payment failed", desc: "Please check your details"), animated: true, completion: nil)
+                        
+                        LabelLog().output(log: "Please ensure that you have connected your Stripe account on Woosignal")
+                        break
+                    case "405":
+                        self.hasOpenedView = false
+                        self.present(LabelAlerts().openWarningController(title: "Payment failed", desc: "Please check your details"), animated: true, completion: nil)
+                        
+                        LabelLog().output(log: "Please ensure that you have connected your Stripe account on Woosignal")
+                        break
+                    default:
+                        self.hasOpenedView = false
+                        self.present(LabelAlerts().openWarningController(title: "Payment failed", desc: "Please check your details"), animated: true, completion: nil)
+                        
+                        break
+                    }
+                }
+            })
         }
     }
     
     func paymentAuthorizationViewControllerDidFinish(_ controller: PKPaymentAuthorizationViewController) {
+        self.hasOpenedView = false
         controller.dismiss(animated: true, completion: nil)
     }
 }
@@ -959,6 +1055,7 @@ extension OrderConfirmationSetViewController:PKPaymentAuthorizationViewControlle
 
 extension OrderConfirmationSetViewController: STPPaymentContextDelegate, STPAddCardViewControllerDelegate {
     public func paymentContext(_ paymentContext: STPPaymentContext, didFailToLoadWithError error: Error) {
+        self.hasOpenedView = false
         self.present(LabelAlerts().openDefaultError(), animated: true, completion: nil)
     }
     
@@ -973,6 +1070,7 @@ extension OrderConfirmationSetViewController: STPPaymentContextDelegate, STPAddC
     }
     
     func addCardViewControllerDidCancel(_ addCardViewController: STPAddCardViewController) {
+        self.hasOpenedView = false
         self.dismiss(animated: true, completion: nil)
     }
     
@@ -980,7 +1078,7 @@ extension OrderConfirmationSetViewController: STPPaymentContextDelegate, STPAddC
         
         var amount:String! = "0"
         
-        amount = self.oAwCore.woBasketTotal(sBasket: self.basket)
+        amount = self.oAwCore.woBasketTotal(sBasket: self.basket,usePriceFormatter: false)
         
         // ASSIGN SHIPPING
         
@@ -1002,6 +1100,7 @@ extension OrderConfirmationSetViewController: STPPaymentContextDelegate, STPAddC
         self.oAwCore.createStripeOrder(email: tfEmail.text ?? "", token: token.tokenId, amount: amount, description: descProds, completion: { response in
             
             if response == nil {
+                self.hasOpenedView = false
                 completion(nil)
             } else {
                 switch response! {
@@ -1014,9 +1113,11 @@ extension OrderConfirmationSetViewController: STPPaymentContextDelegate, STPAddC
                         }
                     })
                 case "500":
+                    self.hasOpenedView = false
                     completion(nil)
                     break
                 default:
+                    self.hasOpenedView = false
                     completion(nil)
                     break
                 }
@@ -1032,7 +1133,7 @@ extension OrderConfirmationSetViewController: PayPalPaymentDelegate {
     
     func payPalPaymentDidCancel(_ paymentViewController: PayPalPaymentViewController) {
         LabelLog().output(log: "PayPal Payment Cancelled")
-        self.didPresentedPayPal = false
+        self.hasOpenedView = false
         paymentViewController.dismiss(animated: true, completion: nil)
     }
     
@@ -1065,101 +1166,134 @@ extension OrderConfirmationSetViewController: PayPalPaymentDelegate {
 extension OrderConfirmationSetViewController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return activeShippingMethods.count == 0 && self.oShippingAddress != nil ? 1 : activeShippingMethods.count
+        
+        if tableView == tvShippings {
+            return activeShippingMethods.count == 0 && self.oShippingAddress != nil ? 1 : activeShippingMethods.count
+        } else if tableView == tvPaymentMethods {
+            return PaymentMethodType.getAllPaymentMethods().count
+        } else {
+            return 0
+        }
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
-        let cell = tvShippings.dequeueReusableCell(withIdentifier: "shipping_cell", for: indexPath) as! ShippingOrderConfirmationTableViewCell
-        
-        if activeShippingMethods.count == 0 && self.oShippingAddress != nil {
+        if tableView == tvShippings {
             
-            cell.lblShippingTitle.text = NSLocalizedString("No shipping to .text", comment: "No shipping to (Text)") + self.oShippingAddress.country + NSLocalizedString(" sorry.text", comment: " sorry (Text)")
-            return cell
-        }
-        
-        let indexMethod = activeShippingMethods[indexPath.row]
-        
-        switch indexMethod.methodId {
-        case "flat_rate":
-            // WORKOUT TOTAL
-            var flatCost = indexMethod.flatRateShipping.settingsCost.value
+            let cell = tvShippings.dequeueReusableCell(withIdentifier: "shipping_cell", for: indexPath) as! ShippingOrderConfirmationTableViewCell
             
-            for item in basket {
-                if item.storeItem.shipping_class == "" {
-                    
-                    let shippingValue = indexMethod.flatRateShipping.settingsNoClassCost.value ?? "0"
-                    
-                    if shippingValue.range(of:"*") != nil || shippingValue.range(of:"+") != nil {
+            if activeShippingMethods.count == 0 && self.oShippingAddress != nil {
+                
+                cell.lblShippingTitle.text = NSLocalizedString("No shipping to .text", comment: "No shipping to (Text)") + self.oShippingAddress.country + NSLocalizedString(" sorry.text", comment: " sorry (Text)")
+                return cell
+            }
+            
+            let indexMethod = activeShippingMethods[indexPath.row]
+            
+            switch indexMethod.methodId {
+            case "flat_rate":
+                // WORKOUT TOTAL
+                var flatCost = indexMethod.flatRateShipping.settingsCost.value
+                flatCost = flatCost?.replacingFirstMatching(",", with: ".")
+                for item in basket {
+                    if item.storeItem.shipping_class == "" {
                         
-                        // 10 + (2 * [qty])
-                        let baseShipping = (matchesForRegexInText(regex: "^[0-9]+", text: shippingValue).first ?? "")
-                        let additionalCost = (matchesForRegexInText(regex: "[0-9]+", text: shippingValue).last ?? "")
-                        let additionalTotal = (Double(additionalCost) ?? 0) * Double(item.qty)
+                        let shippingValue = indexMethod.flatRateShipping.settingsNoClassCost.value ?? "0"
                         
-                        flatCost = String(Double(baseShipping)! + Double(flatCost ?? "")! + additionalTotal)
-                        
-                    } else {
-                        flatCost = String(Double(flatCost ?? "0") ?? 0 + Double(shippingValue)!)
-                    }
-                    
-                } else {
-                    
-                    for i in 0..<(indexMethod.flatRateShipping.shippingDict ?? []).count {
-                        
-                        guard let dict = ((indexMethod.flatRateShipping.shippingDict ?? [])[i].dictionary) else {
-                            continue
+                        if shippingValue.range(of:"*") != nil || shippingValue.range(of:"+") != nil {
+                            
+                            // 10 + (2 * [qty])
+                            let baseShipping = (matchesForRegexInText(regex: "^[0-9]+", text: shippingValue).first ?? "")
+                            let additionalCost = (matchesForRegexInText(regex: "[0-9]+", text: shippingValue).last ?? "")
+                            let additionalTotal = (Double(additionalCost) ?? 0) * Double(item.qty)
+                            
+                            flatCost = String(Double(baseShipping)! + Double(flatCost ?? "")! + additionalTotal)
+                            
+                        } else {
+                            flatCost = String(Double(flatCost ?? "0") ?? 0 + Double(shippingValue)!)
                         }
                         
-                        let shippingClass = item.storeItem.shipping_class ?? ""
+                    } else {
                         
-                        if (dict[shippingClass]?.exists() ?? false) {
-                            guard let dictValue = dict[shippingClass]?.dictionary else {
+                        for i in 0..<(indexMethod.flatRateShipping.shippingDict ?? []).count {
+                            
+                            guard let dict = ((indexMethod.flatRateShipping.shippingDict ?? [])[i].dictionary) else {
                                 continue
                             }
                             
-                            let shippingValue = (Double(dictValue["value"]?.string ?? "0") ?? 0)
-                            flatCost = String(shippingValue + (Double(flatCost ?? "0") ?? 0))
-                        } else {
+                            let shippingClass = item.storeItem.shipping_class ?? ""
                             
+                            if (dict[shippingClass]?.exists() ?? false) {
+                                guard let dictValue = dict[shippingClass]?.dictionary else {
+                                    continue
+                                }
+                                
+                                let shippingValue = (Double(dictValue["value"]?.string ?? "0") ?? 0)
+                                flatCost = String(shippingValue + (Double(flatCost ?? "0") ?? 0))
+                            } else {
+                                
+                            }
                         }
                     }
                 }
+                
+                self.activeShippingMethods[indexPath.row].flatRateShipping.shippingTotal = (flatCost ?? "0")
+                cell.lblShippingTitle.text = indexMethod.flatRateShipping.settingsTitle.value + ": " + (flatCost ?? "0").formatToPrice()
+                
+                break
+            case "free_shipping":
+                cell.lblShippingTitle.text = indexMethod.freeShippingShipping.settingsTitle.value
+                break
+            case "local_pickup":
+                cell.lblShippingTitle.text = indexMethod.localPickupShipping.settingsTitle.value
+                break
+            default:
+                break
             }
             
-            self.activeShippingMethods[indexPath.row].flatRateShipping.shippingTotal = (flatCost ?? "0")
-            cell.lblShippingTitle.text = indexMethod.flatRateShipping.settingsTitle.value + ": " + (flatCost ?? "0").formatToPrice()
+            if activeMethod === indexMethod {
+                cell.accessoryType = .checkmark
+            } else {
+                cell.accessoryType = .none
+            }
             
-            break
-        case "free_shipping":
-            cell.lblShippingTitle.text = indexMethod.freeShippingShipping.settingsTitle.value
-            break
-        case "local_pickup":
-            cell.lblShippingTitle.text = indexMethod.localPickupShipping.settingsTitle.value
-            break
-        default:
-            break
-        }
-        
-        if activeMethod === indexMethod {
-            cell.accessoryType = .checkmark
+            return cell
         } else {
-            cell.accessoryType = .none
+            let cell = tvPaymentMethods.dequeueReusableCell(withIdentifier: "payment_methods_cell", for: indexPath) as! PaymentMethodsTableViewCell
+            
+            let indexMethod = PaymentMethodType.getAllPaymentMethods()[indexPath.row]
+            cell.paymentMethod = indexMethod
+            
+            if activePaymentMethod == indexMethod {
+                cell.accessoryType = .checkmark
+            } else {
+                cell.accessoryType = .none
+            }
+            
+            return cell
         }
-        
-        return cell
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        if activeShippingMethods.count == 0 {
-            return
+        
+        if tableView == tvShippings {
+            if activeShippingMethods.count == 0 {
+                return
+            }
+            
+            self.activeMethod = self.activeShippingMethods[indexPath.row]
+            self.viewContainerShipping.animation = "fadeOut"
+            self.viewContainerShipping.animate()
+            
+            UpdateUI()
+        } else {
+            let activeMethod = PaymentMethodType.getAllPaymentMethods()[indexPath.row]
+            self.activePaymentMethod = activeMethod
+            updateUIPayWith()
+            self.viewContainerPaymentMethods.animation = "fadeOut"
+            self.viewContainerPaymentMethods.animate()
+            self.tvPaymentMethods.reloadData()
         }
-        
-        self.activeMethod = self.activeShippingMethods[indexPath.row]
-        self.viewContainerShipping.animation = "fadeOut"
-        self.viewContainerShipping.animate()
-        
-        UpdateUI()
     }
     
     func getTaxTaxableAmount(tax:LabelTaxes, item:sBasket) -> String {

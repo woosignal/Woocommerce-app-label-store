@@ -53,6 +53,12 @@ extension String {
     func doesMatches(_ regex: String) -> Bool {
         return self.range(of: regex, options: .regularExpression, range: nil, locale: nil) != nil
     }
+    
+    func version() -> String {
+        let dictionary = Bundle.main.infoDictionary!
+        let version = dictionary["CFBundleShortVersionString"] as! String
+        return version
+    }
 }
 
 extension String {
@@ -131,11 +137,9 @@ struct LabelAlerts {
     public func openWithCallback(title:String, desc:String, action: @escaping() -> Void, vc:UIViewController) {
         let alertVC = PMAlertController(title: title, description: desc, image: UIImage(named:"002-man"), style: .alert)
         
-        let positiveAction = PMAlertAction(title: NSLocalizedString("Yes.text", comment: "Yes (Text)"), style: .cancel) {
-            alertVC.dismiss(animated: true, completion: action)
-        }
+        let positiveAction = PMAlertAction(title: NSLocalizedString("Yes.text", comment: "Yes (Text)"), style: .cancel,action:action)
+        
         let negativeAction = PMAlertAction(title: NSLocalizedString("No.text", comment: "No (Text)"), style: .default) {
-            alertVC.dismiss(animated: true, completion: nil)
         }
         
         alertVC.addAction(positiveAction)

@@ -140,7 +140,7 @@
 "MDY-xd-Rnd.text" = "Logout";
 
 /* Class = "UILabel"; text = "Cart Totals"; ObjectID = "MDY-xd-Snd"; */
-"MDY-xd-Snd.text" = "Cart Totals";
+"MDY-xd-Snd.text" = "Order Total";
 
 /* Class = "UILabel"; text = "Select Shipping"; ObjectID = "MDY-xd-Ssd"; */
 "MDY-xd-Ssd.text" = "Select Shipping";

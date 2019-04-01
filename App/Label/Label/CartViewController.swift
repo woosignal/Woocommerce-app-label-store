@@ -13,6 +13,7 @@
 import UIKit
 import NVActivityIndicatorView
 import SwiftyJSON
+import Spring
 import ElasticTransition
 
 class CartViewController: ParentLabelVC, LabelBootstrap {
@@ -32,6 +33,7 @@ class CartViewController: ParentLabelVC, LabelBootstrap {
     @IBOutlet weak var viewContainerLoading: UIView!
     @IBOutlet weak var viewContainerProcessActivityLoader: UIView!
     @IBOutlet weak var viewContainerProcessLoader: UIView!
+    @IBOutlet weak var viewContainerEmptyBasket: SpringView!
     
     @IBAction func clearAllCart(_ sender: UIBarButtonItem) {
         oAwCore.clearBasket()
@@ -60,6 +62,7 @@ class CartViewController: ParentLabelVC, LabelBootstrap {
             LabelAlerts().openWarning(title: NSLocalizedString("Oops...text", comment: "Oops.. (Text)"), desc: NSLocalizedString("Your cart is empty.text", comment: "Your cart is empty (Text)"), vc: self)
         }
     }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -72,15 +75,15 @@ class CartViewController: ParentLabelVC, LabelBootstrap {
         group = DispatchGroup()
         
         self.tmpBasket = self.getBasket()
+        
+        // LOADER
+        let frame = CGRect(x: 0, y: 0, width: self.viewContainerProcessActivityLoader.frame.width + 20, height: self.viewContainerProcessActivityLoader.frame.height)
+        let activityLoader = NVActivityIndicatorView(frame: frame, type: .ballBeat, color: UIColor.lightGray, padding: 20)
+        self.viewContainerProcessActivityLoader.addSubview(activityLoader)
+        activityLoader.startAnimating()
+        self.showProcessingLoader()
+        
         if self.tmpBasket.count != 0 {
-            
-            // LOADER
-            let frame = CGRect(x: 0, y: 0, width: self.viewContainerProcessActivityLoader.frame.width + 20, height: self.viewContainerProcessActivityLoader.frame.height)
-            let activityLoader = NVActivityIndicatorView(frame: frame, type: .ballBeat, color: UIColor.lightGray, padding: 20)
-            self.viewContainerProcessActivityLoader.addSubview(activityLoader)
-            activityLoader.startAnimating()
-            
-            self.showProcessingLoader()
             
             group.enter()
             awCore.shared().getStockCountForCart(items: self.tmpBasket) { (result) in
@@ -119,9 +122,10 @@ class CartViewController: ParentLabelVC, LabelBootstrap {
     
     override func viewDidAppear(_ animated: Bool) {
         if self.tmpBasket.count == 0 {
+            self.viewContainerEmptyBasket.animation = "fadeIn"
+            self.viewContainerEmptyBasket.animate()
             self.hideProcessingLoader()
             self.updateTotal()
-            LabelAlerts().openAlertWithImg(title: NSLocalizedString("Ohh .text", comment: "Ooh (Text)"), desc: NSLocalizedString("Your basket is empty.text", comment: "Your basket is empty (Text)"), image: "commerce-2", vc: self)
         }
     }
     
@@ -214,18 +218,34 @@ extension CartViewController:UICollectionViewDataSource, UICollectionViewDelegat
         cell.lblOrderSubTotal.text = NSLocalizedString("Total: .text", comment: "Total:  (Text)") + self.oAwCore.woItemSubtotal(basketItem: basket[indexPath.row]).formatToPrice()
         
         // DOWNLOAD IMG
-        let productImages = self.oAwCore.sortImagePostions(images: self.basket[indexPath.row].storeItem.image)
-        if let mainImgSrc = productImages[0].src {
-            if mainImgSrc != "" {
-                cell.ivProdMain.sd_setShowActivityIndicatorView(true)
-                cell.ivProdMain.sd_setIndicatorStyle(.gray)
-                cell.ivProdMain.sd_setImage(with: URL(string: mainImgSrc))
-            }
+        if basketItem.storeItem.type == "simple" {
+            self.getImageForProduct(basket: basketItem, cell: cell)
+        } else if basketItem.storeItem.type == "variable" {
+            self.getImageForProduct(basket: basketItem, cell: cell,withSort: false)
+        } else {
+            self.getImageForProduct(basket: basketItem, cell: cell)
         }
         
         cell.btnRemoveProd.tag = indexPath.row
         cell.btnRemoveProd.addTarget(self, action: #selector(removeCart(sender:)), for: .touchUpInside)
         return cell
+    }
+    
+    func getImageForProduct(basket:sBasket, cell: CartCollectionViewCell,withSort:Bool! = true) {
+        var productImages:[sImages]! = []
+        if withSort {
+            productImages = self.oAwCore.sortImagePostions(images: basket.storeItem.image)
+        } else {
+            productImages = basket.storeItem.image
+        }
+        if productImages.count != 0 {
+            if let mainImgSrc = productImages[0].src {
+                if mainImgSrc != "" {
+                    cell.ivProdMain.contentMode = .scaleAspectFit
+                    awCore.shared().getImageFromUrl(imageView: cell.ivProdMain, url: mainImgSrc)
+                }
+            }
+        }
     }
 
     
@@ -266,5 +286,10 @@ extension CartViewController:UICollectionViewDataSource, UICollectionViewDelegat
     func updateTotal() {
         self.lblSubtotal.text = oAwCore.woSubtotal(sBasket: self.basket)
         self.lblTotalPrice.text = NSLocalizedString("Total: .text", comment: "Total: (Text)") + oAwCore.woBasketTotal(sBasket: self.basket)
+        
+        if self.basket.count == 0 {
+            self.viewContainerEmptyBasket.animation = "fadeIn"
+            self.viewContainerEmptyBasket.animate()
+        }
     }
 }

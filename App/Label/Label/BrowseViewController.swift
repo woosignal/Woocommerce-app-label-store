@@ -233,9 +233,7 @@ extension BrowseViewController: UICollectionViewDelegate, UICollectionViewDataSo
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        if activeItems[indexPath.row].variation.count == 0 {
-            performSegue(withIdentifier: "segueDetailProductView", sender: activeItems[indexPath.row])
-        } else if activeItems[indexPath.row].variation.count == 1 && activeItems[indexPath.row].variation[0].id == 0 {
+        if activeItems[indexPath.row].type == "simple" {
             performSegue(withIdentifier: "segueDetailProductView", sender: activeItems[indexPath.row])
         } else {
             performSegue(withIdentifier: "segueDetailFashView", sender: activeItems[indexPath.row])

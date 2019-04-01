@@ -8,20 +8,20 @@
  * registers the activation and deactivation functions, and defines a function
  * that starts the plugin.
  *
- * @link              http://wwww.wooapps.uk
- * @since             1.0.0
+ * @link              https://woosignal.com
+ * @since             1.2.0
  * @package           LabelWoocommerce
  *
  * @wordpress-plugin
- * Plugin Name:       Label Woocommerce
- * Plugin URI:        http://wwww.wooapps.uk
- * Description:       Label Woocommerce links your woocommerce store to your mobile app, you need to ensure that you have Label installed on your server before installing. Feature: Allows you to login/signup in the app
- * Version:           1.0.0
- * Author:            Anthony Gordon <support@wooapps.uk>
- * Author URI:        http://wwww.wooapps.uk
+ * Plugin Name:       Label WooCommerce
+ * Plugin URI:        https://woosignal.com
+ * Description:       Label WooCommerce links your WooCommerce store to your mobile app, you need to ensure that you have Label installed on your server before installing. Feature: Allows you to login/signup in the app
+ * Version:           1.2.0
+ * Author:            Anthony Gordon <support@woosignal.com>
+ * Author URI:        https://woosignal.com
  * License:           GPL-2.0+
  * License URI:       http://www.gnu.org/licenses/gpl-2.0.txt
- * Text Domain:       http://www.wooapps.uk
+ * Text Domain:       https://woosignal.com
  * Domain Path:       /languages
  */
 
@@ -36,17 +36,11 @@ function label_insert_into_db() {
 require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
 }
 
-/**
- * The code that runs during plugin activation.
- * This action is documented in includes/class-login-activator.php
- */
 function label_activate_login() {
     require_once plugin_dir_path( __FILE__ ) . 'includes/class-login-activator.php';
     Login_Activator::activate();
 
-// INSERT INTO DB
     label_insert_into_db();
-
 }
 
 
@@ -72,7 +66,6 @@ function label_sign_up() {
 
 // VALIDATION
 if (!label_rexgex("email",$email)) { echo json_encode(array("status" => "345")); die; } // EMAIL FAILED VALIDATION
-if (!label_rexgex("password",$password)) { echo json_encode(array("status" => "325")); die; } // PASSWORD FAILED VALIDATION
 
 // ENCRYPT PASSWORD
 $password = label_encrypt_password($password);
@@ -85,7 +78,6 @@ $table = $wpdb->prefix . "label_users";
 $qCheck = $wpdb->get_results("SELECT * FROM $table WHERE email = '$email' LIMIT 1");
 
 if (count($qCheck) == 1) {
-        //  USER FOUND SO WE SHOULDN'T SIGN UP
     echo json_encode(array("status" => "402"));
     die;
 }
@@ -133,7 +125,7 @@ function label_rexgex($regex = "", $str = "") {
         case 'name':
         return preg_match("/^[A-z-,]$/", $str);
         case 'email':
-        return preg_match("/^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/", $str);
+        return (filter_var($str, FILTER_VALIDATE_EMAIL));
         case 'password':
         return preg_match("/^(((?=.*[a-z])(?=.*[A-Z]))((?=.*[a-z])(?=.*[0-9])))(?=.{6,})/", $str);
         default:
@@ -229,11 +221,6 @@ function label_update_password() {
     $id = $json['id'];
     $password = $json['new'];
 
-    // VALIDATION
-    // if (!label_rexgex("password", $password)) {
-    //     label_echo_response("335"); // PASSWORD INVALID
-    // }
-
     wp_set_password($password, $id);
 
     label_echo_response("205");
@@ -254,13 +241,6 @@ add_action('rest_api_init', function () {
         'methods' => 'POST',
         'callback' => 'label_update_password',
     ));
-
-    // GET CHART
-
-    // register_rest_route('label/v1', '/gpoints/', array(
-    //     'methods' => 'POST',
-    //     'callback' => 'label_get_points',
-    // ));
 
     // UPDATE DETAILS
 
@@ -364,7 +344,7 @@ function label_echo_response($status = "", $result = array()) {
  *
  * label_parse_json from request request for Label to sign up/register a new users account
  * 
- * @author Anthony Gordon <support@wooapps.uk>
+ * @author Anthony Gordon <support@woosignal.com>
  *
  * @return JSON status e.g. {"status" : "205"}
  *

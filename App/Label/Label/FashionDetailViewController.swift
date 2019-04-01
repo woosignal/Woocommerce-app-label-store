@@ -197,6 +197,14 @@ class FashionDetailViewController: ParentLabelVC, LabelBootstrap {
                 return
             }
             
+            if let img = self.storeItem.getVariationForId(id: variationID)?.image {
+                if img.src.range(of:"placeholder.png") == nil {
+                    if img.src != "" {
+                        self.storeItem.image.insert(img, at: 0)
+                    }
+                }
+            }
+            
             sDefaults().addToBasket(item: self.storeItem, qty: 1, variationID: variationID, variationTitle: styleStr)
             
             self.view.makeToast(NSLocalizedString("3Dh-ls-hIL.text", comment: "Added to basket (Text)"), duration: 1.5, position: .center)
@@ -724,13 +732,13 @@ extension FashionDetailViewController:UIPickerViewDelegate, UIPickerViewDataSour
         
         for variation in storeItem.variation {
             if variation.id == variationID {
-//                self.lblProdPrice.text = variation.price.formatToPrice()
-                self.storeItem.price = variation.price
+
                 self.storeItem.manageStock = variation.manage_stock
                 self.storeItem.inStock = variation.in_stock
                 
-                if variation.price == "" && storeItem.price != "" {
-                    self.lblProdPrice.text = storeItem.price.formatToPrice()
+                if variation.price != nil && variation.price != "" {
+                    self.lblProdPrice.text = variation.price.formatToPrice()
+                    self.storeItem.price = variation.price
                 }
                 
                 if let mainImgSrc = variation.image.src {
@@ -745,10 +753,6 @@ extension FashionDetailViewController:UIPickerViewDelegate, UIPickerViewDataSour
                             self.ivProdMain.sd_setImage(with: URL(string: mainImgSrc))
                         }
                     }
-                }
-                
-                if variation.price == "" && storeItem.price != "" {
-                    self.lblProdPrice.text = storeItem.price
                 }
             }
         }

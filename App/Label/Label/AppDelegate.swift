@@ -23,7 +23,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         STPPaymentConfiguration.shared().publishableKey = labelCore().stripePublishable
         
-        PayPalMobile .initializeWithClientIds(forEnvironments: [PayPalEnvironmentProduction: labelCore().paypalClientID,PayPalEnvironmentSandbox: labelCore().paypalClientID])
+        PayPalMobile.initializeWithClientIds(forEnvironments: [PayPalEnvironmentProduction: labelCore().paypalClientID,PayPalEnvironmentSandbox: labelCore().paypalClientID])
         
         return true
     }

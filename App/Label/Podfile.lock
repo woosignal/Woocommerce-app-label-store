@@ -1,39 +1,38 @@
 PODS:
-  - Alamofire (4.6.0)
-  - AlamofireImage (3.3.0):
-    - Alamofire (~> 4.5)
+  - Alamofire (4.8.1)
   - CardIO (5.4.1)
   - ElasticTransition (3.1.1):
     - MotionAnimation (~> 0.1.2)
-  - Jelly (1.2.4)
+  - GzipSwift (4.1.0)
+  - Jelly (1.2.5)
   - MotionAnimation (0.1.2)
-  - NVActivityIndicatorView (4.1.0):
-    - NVActivityIndicatorView/Presenter (= 4.1.0)
-  - NVActivityIndicatorView/Presenter (4.1.0)
-  - PayPal-iOS-SDK (2.18.0):
-    - PayPal-iOS-SDK/CardIO (= 2.18.0)
-    - PayPal-iOS-SDK/Core (= 2.18.0)
-  - PayPal-iOS-SDK/CardIO (2.18.0):
+  - NVActivityIndicatorView (4.6.1):
+    - NVActivityIndicatorView/Presenter (= 4.6.1)
+  - NVActivityIndicatorView/Presenter (4.6.1)
+  - PayPal-iOS-SDK (2.18.1):
+    - PayPal-iOS-SDK/CardIO (= 2.18.1)
+    - PayPal-iOS-SDK/Core (= 2.18.1)
+  - PayPal-iOS-SDK/CardIO (2.18.1):
     - CardIO (~> 5.4.1)
-  - PayPal-iOS-SDK/Core (2.18.0)
-  - PMAlertController (3.0.0)
-  - SDWebImage (4.3.3):
-    - SDWebImage/Core (= 4.3.3)
-  - SDWebImage/Core (4.3.3)
+  - PayPal-iOS-SDK/Core (2.18.1)
+  - PMAlertController (2.1.3)
+  - SDWebImage (4.4.6):
+    - SDWebImage/Core (= 4.4.6)
+  - SDWebImage/Core (4.4.6)
   - Spring (1.0.3)
-  - Stripe (11.5.0)
+  - Stripe (14.0.0)
   - SwiftDate (4.3.0)
-  - SwiftyJSON (4.0.0)
+  - SwiftyJSON (4.2.0)
   - Toast-Swift (3.0.1)
 
 DEPENDENCIES:
   - Alamofire (~> 4.0)
-  - AlamofireImage (~> 3.1)
   - ElasticTransition
+  - GzipSwift
   - Jelly
   - NVActivityIndicatorView
   - PayPal-iOS-SDK
-  - PMAlertController
+  - PMAlertController (~> 2.1.3)
   - SDWebImage (~> 4.0)
   - Spring (from `https://github.com/MengTo/Spring.git`, branch `swift3`)
   - Stripe
@@ -44,9 +43,9 @@ DEPENDENCIES:
 SPEC REPOS:
   https://github.com/cocoapods/specs.git:
     - Alamofire
-    - AlamofireImage
     - CardIO
     - ElasticTransition
+    - GzipSwift
     - Jelly
     - MotionAnimation
     - NVActivityIndicatorView
@@ -69,22 +68,22 @@ CHECKOUT OPTIONS:
     :git: https://github.com/MengTo/Spring.git
 
 SPEC CHECKSUMS:
-  Alamofire: f41a599bd63041760b26d393ec1069d9d7b917f4
-  AlamofireImage: 2e784dc5d00f04903a52c1d169181469c805c3df
+  Alamofire: 16ce2c353fb72865124ddae8a57c5942388f4f11
   CardIO: 56983b39b62f495fc6dae9ad7cf875143df06443
   ElasticTransition: 6c4e4739e32480c864217db912100f3657f6447a
-  Jelly: 70e542dd201460211f0f20042bc2c2d31ae239a1
+  GzipSwift: df1636fa095bd8f21d98db14e7393ecc9e230fed
+  Jelly: cc6b6a81ed3c476fe0126b10526ee9eb8c98bb45
   MotionAnimation: ff5c8fc2e429d7e10d46ae86819ba9759846c343
-  NVActivityIndicatorView: dc4726052dc24e89fa8576d43acf9e96f61d49db
-  PayPal-iOS-SDK: 3fc74982a68d54eeaf39e09f507f279dc2291860
-  PMAlertController: 90c809d1dbf38293cfa1817da6d023314bc24075
-  SDWebImage: de4d90b5bff3571eae7bd16202b1f43135409fa5
+  NVActivityIndicatorView: 4ca19fccc84595a78957336a086d00a49be6ce61
+  PayPal-iOS-SDK: 10654cd111e911a9807bddb96fae81aacb8e9915
+  PMAlertController: 424dd044c7e55cd318e7a028d3a231e540733115
+  SDWebImage: 3f3f0c02f09798048c47a5ed0a13f17b063572d8
   Spring: 3f02b5dc3308572ef177b3cad0fa7bbc4b0706f7
-  Stripe: 10761682d20dc491c52287393c800db056c9748d
+  Stripe: db29ad197c74aca6fb981e4e8355cf7ebd0fca5a
   SwiftDate: 64e2312711c5c506f7b51794308ce91f19eb494a
-  SwiftyJSON: 070dabdcb1beb81b247c65ffa3a79dbbfb3b48aa
+  SwiftyJSON: c4bcba26dd9ec7a027fc8eade48e2c911f229e96
   Toast-Swift: ba0b01b095aada709d915f9beb1d38184a2721c3
 
-PODFILE CHECKSUM: 93f9bd3c9947f6852d8a97e5dc22e25605521f63
+PODFILE CHECKSUM: fbe87c514e9e951d36330810813d2f60d8ad39da
 
-COCOAPODS: 1.5.2
+COCOAPODS: 1.6.0

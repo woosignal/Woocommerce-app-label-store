@@ -29,6 +29,7 @@ struct sDefaults {
     public let defaultsAppAccessToken:String! = "DEFAULT_ACCESS_TOKEN"
     public let defaultsAppDateLastToken:String! = "DEFAULT_DATE_LAST_TOKEN"
     public let defaultsAppKey:String! = "DEFAULT_APP_KEY"
+    public let defaultsAppUser:String! = "DEFAULT_APP_USER"
     
     public let versionIos:String! = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String
     
@@ -79,6 +80,21 @@ struct sDefaults {
         }
         self.pref.set(accessToken, forKey: self.defaultsAppAccessToken)
         self.pref.set(Date(), forKey: self.defaultsAppDateLastToken)
+    }
+    
+    public func getAppUser() -> AppUser? {
+        var objUser:AppUser?
+        
+        if let data = self.pref.object(forKey: self.defaultsAppUser) as? Data {
+            objUser = try? JSONDecoder().decode(AppUser.self, from: data)
+        }
+        
+        return objUser ?? nil
+    }
+    
+    public func setAppUser(user:AppUser?) {
+        let data = try? JSONEncoder().encode(user)
+        self.pref.set(data, forKey: self.defaultsAppUser)
     }
     
     /**

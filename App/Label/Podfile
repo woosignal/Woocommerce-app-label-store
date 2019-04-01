@@ -1,13 +1,12 @@
 # Uncomment this line to define a global platform for your project
-platform :ios, '9.0'
+platform :ios, '9.2'
 use_frameworks!
 
 target 'Label' do
   pod 'Stripe'
   pod 'PayPal-iOS-SDK'
-  pod 'PMAlertController'
+  pod 'PMAlertController', '~> 2.1.3'
   pod 'Alamofire', '~> 4.0'
-  pod 'AlamofireImage', '~> 3.1'
   pod 'SwiftyJSON'
   pod 'NVActivityIndicatorView'
   pod 'Spring', :git => 'https://github.com/MengTo/Spring.git', :branch => 'swift3'
@@ -16,6 +15,7 @@ target 'Label' do
   pod 'Toast-Swift', '~> 3.0.1'
   pod 'SDWebImage', '~> 4.0'
   pod 'SwiftDate', '~> 4.3.0'
+  pod 'GzipSwift'
 
   target 'LabelUITests' do
     inherit! :search_paths

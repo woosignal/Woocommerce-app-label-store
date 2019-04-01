@@ -1047,6 +1047,7 @@ class storeItem: NSObject, NSCoding {
     var variation:[sVariation]!
     lazy var featured:Bool! = false
     lazy var onSale:Bool! = Bool()
+    lazy var type:String! = String()
     
     init(dataDict:JSON) {
         super.init()
@@ -1070,6 +1071,7 @@ class storeItem: NSObject, NSCoding {
         self.shipping_class = dataDict["shipping_class"].stringValue
         self.featured = dataDict["featured"].boolValue
         self.onSale = dataDict["on_sale"].bool
+        self.type = dataDict["type"].stringValue
         
         self.image = []
         self.attributes = []
@@ -1126,7 +1128,8 @@ class storeItem: NSObject, NSCoding {
             let average_rating = decoder.decodeObject(forKey: "average_rating") as? String,
             let shipping_class = decoder.decodeObject(forKey: "shipping_class") as? String,
             let attributes = decoder.decodeObject(forKey: "attributes") as? [sAttributes],
-            let variation = decoder.decodeObject(forKey: "variation") as? [sVariation]
+            let variation = decoder.decodeObject(forKey: "variation") as? [sVariation],
+            let type = decoder.decodeObject(forKey: "type") as? String
             else { return nil }
         
         self.init(
@@ -1151,7 +1154,8 @@ class storeItem: NSObject, NSCoding {
                 "average_rating":average_rating,
                 "shipping_class":shipping_class,
                 "attributes":attributes,
-                "variation":variation
+                "variation":variation,
+                "type":type
             ]
         )
         self.image = image
@@ -1181,6 +1185,16 @@ class storeItem: NSObject, NSCoding {
         aCoder.encode(self.shipping_class, forKey: "shipping_class")
         aCoder.encode(self.attributes, forKey: "attributes")
         aCoder.encode(self.variation, forKey: "variation")
+        aCoder.encode(self.type, forKey: "type")
+    }
+    
+    func getVariationForId(id:Int!) -> sVariation? {
+        for variation in self.variation {
+            if variation.id == id {
+                return variation
+            }
+        }
+        return nil
     }
 }
 
@@ -1768,4 +1782,19 @@ class LabelUserBuilder {
         let pattern:Regex! = labelRegex().password
         return pattern.matches(password)
     }
+}
+
+// MARK: PaymentMethod
+struct PaymentMethod {
+    var id:Int!
+    var title:String!
+    var image:String!
+}
+
+// MARK: AppUser
+struct AppUser:Codable {
+    var firstName:String! = ""
+    var lastName:String! = ""
+    var email:String! = ""
+    var telephone:String! = ""
 }

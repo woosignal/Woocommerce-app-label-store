@@ -10,6 +10,7 @@
 #endif
 #endif
 
+#import "FauxPasAnnotations.h"
 #import "STPAddCardViewController.h"
 #import "STPAddress.h"
 #import "STPAPIClient+ApplePay.h"
@@ -25,6 +26,7 @@
 #import "STPCardParams.h"
 #import "STPCardValidationState.h"
 #import "STPCardValidator.h"
+#import "STPConnectAccountParams.h"
 #import "STPCoreScrollViewController.h"
 #import "STPCoreTableViewController.h"
 #import "STPCoreViewController.h"
@@ -34,10 +36,16 @@
 #import "STPFile.h"
 #import "STPFormEncodable.h"
 #import "STPImageLibrary.h"
+#import "STPLegalEntityParams.h"
 #import "STPPaymentActivityIndicatorView.h"
 #import "STPPaymentCardTextField.h"
 #import "STPPaymentConfiguration.h"
 #import "STPPaymentContext.h"
+#import "STPPaymentIntent.h"
+#import "STPPaymentIntentEnums.h"
+#import "STPPaymentIntentParams.h"
+#import "STPPaymentIntentSourceAction.h"
+#import "STPPaymentIntentSourceActionAuthorizeWithURL.h"
 #import "STPPaymentMethod.h"
 #import "STPPaymentMethodsViewController.h"
 #import "STPPaymentResult.h"

@@ -46,7 +46,7 @@ class AboutViewController: ParentLabelVC, LabelBootstrap {
         super.viewDidLoad()
         self.lblCompanyName.text = labelCore().storeName.uppercased()
         self.ivCompanyMain.image = UIImage(named: labelCore().storeImage)
-        self.lblAppVersion.text = NSLocalizedString("text.Version: ", comment: "Version: (Text)") + labelCore().version()
+        self.lblAppVersion.text = NSLocalizedString("text.Version: ", comment: "Version: (Text)") + String().version()
         
         self.lblSupportEmail.text = labelCore().storeEmail.uppercased()
     }

@@ -15,6 +15,7 @@ import UIKit
 import PMAlertController
 import Alamofire
 import SwiftyJSON
+import Gzip
 
 // MARK: LABEL WOO REQUESTS
 enum requestType:Int {
@@ -59,10 +60,13 @@ enum requestType:Int {
 
 class awCore {
     
-    var serviceUrl:String! = ""
     var isDebugging:Bool! = false
     var token = ""
     let apiBaseUrl = "https://woosignal.com/"
+    
+    func getApiBase(version:ApiVersionType) -> String {
+        return self.apiBaseUrl + version.value()
+    }
     
     class func shared() -> awCore {
         return sharedNetworkManager
@@ -74,7 +78,6 @@ class awCore {
     
     init() {
         self.isDebugging = labelCore().labelDebug
-        self.serviceUrl = "https://woosignal.com/api/v1/"
     }
     
     public func getNonce() -> String? {
@@ -148,6 +151,24 @@ class awCore {
             }
             completion(storeDict)
         }
+    }
+    
+    // MARK: getImageFromUrl
+    /**
+     Downloads an image to UIImageView
+     
+     - Author:
+     Anthony Gordon (support@woosignal.com)
+     
+     - parameters:
+     - imageView: UIImageView you want the image to appear in
+     - url: The full url in String format
+     
+     */
+    public func getImageFromUrl(imageView:UIImageView, url:String) {
+        imageView.sd_setShowActivityIndicatorView(true)
+        imageView.sd_setIndicatorStyle(.gray)
+        imageView.sd_setImage(with: URL(string: url))
     }
     
     public func wpRegister(username:String,email:String,firstName:String,lastName:String,password:String, completion: @escaping (Bool?) -> Void) {
@@ -364,7 +385,7 @@ class awCore {
      Update a users password a user ID
      
      - Author:
-     Anthony Gordon (support@wooapps.uk)
+     Anthony Gordon (support@woosignal.com)
      
      - parameters:
      - id: ID for the user
@@ -403,7 +424,7 @@ class awCore {
      Returns [storeItem] for a given array of storeItem "id's"
      
      - Author:
-     Anthony Gordon (support@wooapps.uk)
+     Anthony Gordon (support@woosignal.com)
      
      - parameters:
      - completion: Completion block which returns ([storeItem]?)
@@ -446,7 +467,7 @@ class awCore {
      Gets user information for an id
      
      - Author:
-     Anthony Gordon (support@wooapps.uk)
+     Anthony Gordon (support@woosignal.com)
      
      - parameters:
      - userId: ID for the user
@@ -496,7 +517,7 @@ class awCore {
      Gets all products for the store
      
      - Author:
-     Anthony Gordon (support@wooapps.uk)
+     Anthony Gordon (support@woosignal.com)
      
      - parameters:
      - completion: Completion block which returns ([storeItem]?)
@@ -504,8 +525,9 @@ class awCore {
      */
     public func getAllProducts(completion: @escaping ([storeItem]?) -> Void) {
         
-        // POST
-        self.get(param: [String:Any](), request: .get_prods) { (response) in
+        // GET
+        self.getGzip(param: [String:Any](), request: .get_prods, version: .v2) { (response) in
+            
             let dataVal = JSON(response ?? []).arrayObject
             var storeDict:[storeItem]! = [storeItem]()
             
@@ -527,7 +549,7 @@ class awCore {
      Parses a web response from Label
      
      - Author:
-     Anthony Gordon (support@wooapps.uk)
+     Anthony Gordon (support@woosignal.com)
      
      - parameters:
      - json: JSON object from Label server
@@ -559,7 +581,7 @@ class awCore {
      Update details for the Label server
      
      - Author:
-     Anthony Gordon (support@wooapps.uk)
+     Anthony Gordon (support@woosignal.com)
      
      - parameters:
      - firstName: First name of the user
@@ -584,7 +606,6 @@ class awCore {
                 "id":String(describing: userId)
             ]
         ]
-        
         
         self.post(param: dict, request: .update_details) { (result) in
             
@@ -617,7 +638,7 @@ class awCore {
      Get details for the Label server
      
      - Author:
-     Anthony Gordon (support@wooapps.uk)
+     Anthony Gordon (support@woosignal.com)
      
      - parameters:
      - id: ID for the label user
@@ -663,7 +684,7 @@ class awCore {
      Converts an [sBasket] basket an [NSDictionary]
      
      - Author:
-     Anthony Gordon (support@wooapps.uk)
+     Anthony Gordon (support@woosignal.com)
      
      - parameters:
      - basket: Basket for the user
@@ -688,7 +709,7 @@ class awCore {
      Converts an [sBasket] basket an [NSDictionary]
      
      - Author:
-     Anthony Gordon (support@wooapps.uk)
+     Anthony Gordon (support@woosignal.com)
      
      - parameters:
      - shippings: The shipping address for the the user
@@ -718,7 +739,7 @@ class awCore {
      Creates an order for the Label Store, request creates an order in Woocommerce
      
      - Author:
-     Anthony Gordon (support@wooapps.uk)
+     Anthony Gordon (support@woosignal.com)
      
      - parameters:
      - user: Information for a user
@@ -823,7 +844,7 @@ class awCore {
      Sends Stripe payment information to the Label server.
      
      - Author:
-     Anthony Gordon (support@wooapps.uk)
+     Anthony Gordon (support@woosignal.com)
      
      - parameters:
      - email: The email for the buyer.
@@ -835,12 +856,12 @@ class awCore {
      */
     public func createStripeOrder(email:String,token:String,amount:String,description:String, completion: @escaping (String?) -> Void) {
         
-        let amount = String(amount.characters.dropFirst())
+        let amount = Int((Double(amount) ?? 0) * 100)
         
         let dict = [
             "email":email,
             "token":token,
-            "amount":Int((Double(amount) ?? 0) * 100),
+            "amount":amount,
             "description":description
             ] as [String : Any]
         
@@ -852,28 +873,12 @@ class awCore {
         }
     }
     
-    struct labelOrder {
-        var idUser:String!
-        var idOrder:String!
-        var dateAdded:String!
-    }
-    
-    /**
-     getLabelOrders
-     
-     - parameters:
-     - completion: Completion block which returns LabelOrders
-     */
-    public func getLabelOrders() {
-        
-    }
-    
     // MARK: GET ORDERS
     /**
      Gets all the orders for an array of order ID's
      
      - Author:
-     Anthony Gordon (support@wooapps.uk)
+     Anthony Gordon (support@woosignal.com)
      
      - parameters:
      - completion: Completion block which returns ([Any]?)
@@ -894,7 +899,7 @@ class awCore {
      Gets all the categories for the Label Store
      
      - Author:
-     Anthony Gordon (support@wooapps.uk)
+     Anthony Gordon (support@woosignal.com)
      
      - parameters:
      - completion: Completion block which returns ([sCategory]?)
@@ -924,7 +929,7 @@ class awCore {
      Gets products in a given category ID via the Label Store.
      
      - Author:
-     Anthony Gordon (support@wooapps.uk)
+     Anthony Gordon (support@woosignal.com)
      
      - parameters:
      - id: ID for the category
@@ -959,7 +964,7 @@ class awCore {
      Get search results from string. Request type is "get_prodsearch"
      
      - Author:
-     Anthony Gordon (support@wooapps.uk)
+     Anthony Gordon (support@woosignal.com)
      
      - parameters:
      - search: Text for a given search
@@ -1025,23 +1030,23 @@ class awCore {
      Create a POST request via Alamofire
      
      - Author:
-     Anthony Gordon (support@wooapps.uk)
+     Anthony Gordon (support@woosignal.com)
      
      - parameters:
      - param: Takes an array
      - request: Type of request
      */
-    public func post(param:[String:Any], request:requestType, completion: @escaping (Any?) -> Void) {
+    public func post(param:[String:Any], request:requestType,version:ApiVersionType! = .v1, completion: @escaping (Any?) -> Void) {
         
         var requestParam = param
         requestParam["type"] = request.toString()
         
-        var url:String! = self.serviceUrl
+        var url:String! = self.getApiBase(version: version)
         
         if (request == .update_password || request == .update_details || request == .get_details) {
             url = labelCore().wcUrl + "wp-json/label/v1/" + request.toString()
         } else {
-            url = self.serviceUrl + request.toString()
+            url = self.getApiBase(version: version) + request.toString()
         }
         
         var headers: HTTPHeaders = [
@@ -1052,9 +1057,9 @@ class awCore {
         if request == .get_app_token {
             headers = HTTPHeaders()
         }
-        
+        UIApplication.shared.isNetworkActivityIndicatorVisible = true
         Alamofire.request(url, method: .post,parameters:requestParam,headers:headers).validate().responseJSON { response in
-            
+            UIApplication.shared.isNetworkActivityIndicatorVisible = false
             self.LabelPrint(url: url, request: request.toString(),parameters:requestParam, response: (response.result))
             
             switch response.result {
@@ -1075,23 +1080,23 @@ class awCore {
      Create a GET request via Alamofire
      
      - Author:
-     Anthony Gordon (support@wooapps.uk)
+     Anthony Gordon (support@woosignal.com)
      
      - parameters:
      - param: Takes an array
      - request: Type of request
      */
-    public func get(param:[String:Any], request:requestType, completion: @escaping (Any?) -> Void) {
+    public func get(param:[String:Any], request:requestType, version:ApiVersionType! = .v1, completion: @escaping (Any?) -> Void) {
         
         var requestParam = param
         requestParam["type"] = request.toString()
         
-        var url:String! = self.serviceUrl
+        var url:String! = self.getApiBase(version: version)
         
         if (request == .update_password || request == .update_details || request == .get_details) {
             url = labelCore().wcUrl + "wp-json/label/v1/" + request.toString()
         } else {
-            url = self.serviceUrl + request.toString()
+            url = self.getApiBase(version: version) + request.toString()
         }
         
         var headers: HTTPHeaders = [
@@ -1103,9 +1108,9 @@ class awCore {
         if request == .get_app_token {
             headers = HTTPHeaders()
         }
-        
+        UIApplication.shared.isNetworkActivityIndicatorVisible = true
         Alamofire.request(url, method: .get,parameters:requestParam,headers:headers).validate().responseJSON { response in
-            
+            UIApplication.shared.isNetworkActivityIndicatorVisible = false
             self.LabelPrint(url: url, request: request.toString(),parameters:requestParam, response: (response.result))
             
             switch response.result {
@@ -1121,13 +1126,77 @@ class awCore {
         }
     }
     
+    public func getGzip(param:[String:Any], request:requestType, version:ApiVersionType! = .v1, completion: @escaping (Any?) -> Void) {
+        
+        var requestParam = param
+        requestParam["type"] = request.toString()
+        
+        var url:String! = self.getApiBase(version: version)
+        
+        if (request == .update_password || request == .update_details || request == .get_details) {
+            url = labelCore().wcUrl + "wp-json/label/v1/" + request.toString()
+        } else {
+            url = self.getApiBase(version: version) + request.toString()
+        }
+        
+        var headers: HTTPHeaders = [
+            "Authorization": "Bearer " + (sDefaults().getAccessToken() ?? ""),
+            "Accept-Encoding": "gzip"
+        ]
+        
+        if request == .get_app_token {
+            headers = HTTPHeaders()
+        }
+        
+        UIApplication.shared.isNetworkActivityIndicatorVisible = true
+        Alamofire.request(url, method: .get,parameters:requestParam,headers:headers).validate().responseData { response in
+            UIApplication.shared.isNetworkActivityIndicatorVisible = false
+            
+            guard let val = response.result.value else {
+                completion(nil)
+                return
+            }
+            
+            let decompressedData: Data
+            if val.isGzipped {
+                do {
+                    decompressedData = try response.result.value!.gunzipped()
+                } catch {
+                    completion(nil)
+                    return
+                }
+            } else {
+                completion(nil)
+                return
+            }
+            
+            var json:Any!
+            do {
+                json = try JSONSerialization.jsonObject(with: decompressedData, options: [])
+            } catch {
+                json = []
+            }
+            
+            self.LabelPrintGzip(url: url, request: request.toString(),parameters:requestParam, response: (json))
+            
+            switch response.result {
+            case .success:
+                completion(json)
+            case .failure(let error):
+                print(error)
+                completion(nil)
+                return
+            }
+        }
+    }
+    
     
     // MARK: SORT IMAGE POSITIONS
     /**
      Sorts an array of sImages into the correct index
      
      - Author:
-     Anthony Gordon (support@wooapps.uk)
+     Anthony Gordon (support@woosignal.com)
      
      - parameters:
      - images: Images which come from the product JSON
@@ -1148,7 +1217,7 @@ class awCore {
      A string explaining a brief description for what is in the users basket.
      
      - Author:
-     Anthony Gordon (support@wooapps.uk)
+     Anthony Gordon (support@woosignal.com)
      
      - parameters:
      - items: Basket for the user
@@ -1183,7 +1252,7 @@ class awCore {
      Generates a subtotal from a [sBasket]
      
      - Author:
-     Anthony Gordon (support@wooapps.uk)
+     Anthony Gordon (support@woosignal.com)
      
      - parameters:
      - sBasket: An array of the users basket
@@ -1216,7 +1285,7 @@ class awCore {
      Generates a basket total from [sBasket]
      
      - Author:
-     Anthony Gordon (support@wooapps.uk)
+     Anthony Gordon (support@woosignal.com)
      
      - parameters:
      - sBasket: Basket for the user
@@ -1263,7 +1332,7 @@ class awCore {
      Gets the subtotal for the a item
      
      - Author:
-     Anthony Gordon (support@wooapps.uk)
+     Anthony Gordon (support@woosignal.com)
      
      - parameters:
      - basketItem:The item you want to workout the subtotal for in the basket.
@@ -1298,7 +1367,7 @@ class awCore {
      Generates the total for a item in the basket
      
      - Author:
-     Anthony Gordon (support@wooapps.uk)
+     Anthony Gordon (support@woosignal.com)
      
      - parameters:
      - sBasket: An item in the current users basket
@@ -1337,7 +1406,7 @@ class awCore {
      Clears a basket in the shared preferences.
      
      - Author:
-     Anthony Gordon (support@wooapps.uk)
+     Anthony Gordon (support@woosignal.com)
      
      */
     public func clearBasket() {
@@ -1350,7 +1419,7 @@ class awCore {
      Logs in the console the request information from a endpoint.
      
      - Author:
-     Anthony Gordon (support@wooapps.uk)
+     Anthony Gordon (support@woosignal.com)
      
      - parameters:
      - url: URL for call made
@@ -1372,12 +1441,17 @@ class awCore {
         }
     }
     
-    // MARK: DICTIONARY
-    func queryString(dictionary:[String:Any]) -> String {
-        var queryString: String? {
-            return dictionary.reduce("") { "\($0!)\($1.0)=\($1.1)&" }
+    private func LabelPrintGzip(url:String? = "",request:String? = "", parameters:[String:Any], response:Any) {
+        if self.isDebugging == true {
+            print("------------------------\n")
+            print("ENDPOINT: " + (url ?? ""))
+            print("PARAMETERS: ")
+            print(parameters)
+            print("METHOD: @" + (request ?? ""))
+            print("RESPONSE:")
+            print(response)
+            print("------------------------\n")
         }
-        return String(describing:(queryString ?? "").dropLast())
     }
 }
 
@@ -1429,3 +1503,4 @@ let dTaxes = JSON(
         "subtotal":0.00
     ]
 )
+

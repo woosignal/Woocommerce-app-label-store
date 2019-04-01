@@ -112,7 +112,10 @@ class ShippingAddressViewController: UIViewController, LabelBootstrap {
         self.oAwCore = awCore()
         
         if let data = sDefaults().pref.object(forKey: sDefaults().userAddress) as? Data {
-            oShippingAddress = NSKeyedUnarchiver.unarchiveObject(with: data) as? labelShippingAddress
+            guard let shippingAddress = NSKeyedUnarchiver.unarchiveObject(with: data) as? labelShippingAddress else {
+                return
+            }
+            oShippingAddress = shippingAddress
             
             tfAddressLine.text = oShippingAddress.line1
             tfCity.text = oShippingAddress.city

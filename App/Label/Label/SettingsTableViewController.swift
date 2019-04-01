@@ -125,13 +125,13 @@ class SettingsTableViewController: UITableViewController, LabelBootstrap {
     }
     
     func logout() {
-        self.view.isUserInteractionEnabled = false
         // LOGOUT SELECTED
         LabelAlerts().openWithCallback(title: NSLocalizedString("Logout?.text", comment: "Logout? (Text)"), desc: NSLocalizedString("Are you sure.text", comment: "Are you sure (Text)"), action: {
             
             sDefaults().logout()
-            self.view.isUserInteractionEnabled = true
-            self.performSegue(withIdentifier: "LogoutSegue", sender: self)
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1.0, execute: {
+                self.performSegue(withIdentifier: "LogoutSegue", sender: nil)
+            })
             
         }, vc: self)
     }

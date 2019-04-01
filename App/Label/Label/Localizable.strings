@@ -257,7 +257,7 @@
 "MDY-xd-Rnd.text" = "Logout";
 
 /* Class = "UILabel"; text = "Cart Totals"; ObjectID = "MDY-xd-Snd"; */
-"MDY-xd-Snd.text" = "Cart Totals";
+"MDY-xd-Snd.text" = "Order Total";
 
 /* Class = "UILabel"; text = "Select Shipping"; ObjectID = "MDY-xd-Ssd"; */
 "MDY-xd-Ssd.text" = "Select Shipping";
@@ -482,7 +482,7 @@
 "text.orderRefOrderConfirmed" = "Order Ref: ";
 
 /* Class = "UILabel"; text = "Payment Method"; ObjectID = "p3r-tE-7RK"; */
-"p3r-tE-7RK.text" = "Payment Method";
+"p3r-tE-7RK.text" = "Pay with";
 
 /* Class = "UIBarButtonItem"; title = "Item"; ObjectID = "pAy-gV-Vlp"; */
 "pAy-gV-Vlp.title" = "Item";
@@ -548,7 +548,7 @@
 "u6l-WR-gNT.title" = "Order Confirmation";
 
 /* Class = "UIButton"; normalTitle = "CONTINUE TO PAYMENT"; ObjectID = "u7I-h9-UQ3"; */
-"u7I-h9-UQ3.normalTitle" = "CONTINUE TO PAYMENT";
+"u7I-h9-UQ3.normalTitle" = "PROCEED TO CHECKOUT";
 
 /* Class = "UINavigationItem"; title = "Order Confirmation"; ObjectID = "uWs-UU-1tq"; */
 "uWs-UU-1tq.title" = "Order Confirmation";
@@ -582,3 +582,9 @@
 
 /* Class = "UILabel"; text = "Description"; ObjectID = "zF1-LE-PDu"; */
 "zF1-LE-PDu.text" = "Description";
+
+"ps1-Ap-PDu.text" = "No results found";
+"pay.text" = "Pay";
+"Payment Methods.text" = "Payment Methods";
+"Cancel.text" = "Cancel";
+"Subtotal.text" = "Subtotal";

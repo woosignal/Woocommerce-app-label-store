@@ -1,8 +1,6 @@
-LABEL 
-
-VERSION: V1.0
+LABEL Plugin
 CREATED BY: Anthony Gordon
-SUPPORT: support@wooapps.uk
+SUPPORT: support@woosignal.com
 
 INSTALLING PLUGIN
 

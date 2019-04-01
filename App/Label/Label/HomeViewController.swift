@@ -266,11 +266,6 @@ class HomeViewController: ParentLabelVC, LabelBootstrap {
         self.viewContainerCategory.layer.cornerRadius = 2
         self.viewContainerCategory.clipsToBounds = true
         
-        self.addMenuBorder(view:viewMenuViewBasket)
-        self.addMenuBorder(view:viewMenuOrders)
-        self.addMenuBorder(view:viewMenuAbout)
-        self.addMenuBorder(view:viewMenuAccount)
-        
         viewContainerSearchBtnIcon.layer.cornerRadius = 5
         viewContainerSearchBtnIcon.clipsToBounds = true
     }
@@ -457,12 +452,10 @@ extension HomeViewController:UICollectionViewDataSource,UICollectionViewDelegate
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         self.selectedStoreItem = storeItems[indexPath.row]
         
-        if storeItems[indexPath.row].variation.count == 0 {
-            performSegue(withIdentifier: "segueDetailProductView", sender: self)
-        } else if storeItems[indexPath.row].variation.count == 1 && storeItems[indexPath.row].variation[0].id == 0 {
-            performSegue(withIdentifier: "segueDetailProductView", sender: self)
+        if storeItems[indexPath.row].type == "simple" {
+            performSegue(withIdentifier: "segueDetailProductView", sender: nil)
         } else {
-            performSegue(withIdentifier: "segueDetailFashView", sender: self)
+            performSegue(withIdentifier: "segueDetailFashView", sender: nil)
         }
     }
     
@@ -474,7 +467,7 @@ extension HomeViewController:UICollectionViewDataSource,UICollectionViewDelegate
             transition.showShadow = true
             transition.panThreshold = 0.2
             transition.transformType = .rotate
-            transition.edge = .top
+            transition.edge = .right
             
             let destination = segue.destination as! FashionDetailViewController
             destination.storeItem = selectedStoreItem
@@ -489,7 +482,7 @@ extension HomeViewController:UICollectionViewDataSource,UICollectionViewDelegate
             transition.showShadow = true
             transition.panThreshold = 0.2
             transition.transformType = .rotate
-            transition.edge = .top
+            transition.edge = .right
             
             let destination = segue.destination as! ProductDetailViewController
             destination.storeItem = selectedStoreItem

@@ -101,15 +101,15 @@ extension StatusOrderViewController:UITableViewDelegate, UITableViewDataSource {
         cell.lblProdInfo.text = "x " + String(prodQuantity!) + " | " + String(prodPrice)!
         
          // DOWNLOAD IMG
+        // DOWNLOAD IMG
         let productImages = self.oAwCore.sortImagePostions(images: oOrder.basket[indexPath.row].storeItem.image)
-                if let mainImgSrc = productImages[0].src {
-                    if mainImgSrc != "" {
-                        
-                        cell.ivProd.sd_setShowActivityIndicatorView(true)
-                        cell.ivProd.sd_setIndicatorStyle(.gray)
-                        cell.ivProd.sd_setImage(with: URL(string: mainImgSrc))
-                    }
+        if productImages.count != 0 {
+            if let mainImgSrc = productImages[0].src {
+                if mainImgSrc != "" {
+                    awCore.shared().getImageFromUrl(imageView: cell.ivProd, url: mainImgSrc)
                 }
+            }
+        }
         return cell
     }
     

@@ -89,7 +89,6 @@
       </table>
 
       <!-- DIALOG -->
-
       <div id="dialog" title="Basic dialog">
         <div class="container">
         </div>
@@ -98,14 +97,13 @@
     </div>
   
     <div id="menu2" class="tab-pane fade">
-      <h1>Label</h1>
-      <p><b>Version v1.4</b></p>
-      <p>Developed By: Anthony Gordon</p>
-      <p>Support: <a href="mailto:support@wooapps.uk">support@wooapps.uk</a></p>
-      <b>Apps</b>
-      - <a href="https://codecanyon.net/item/label-creative-ios-app-for-woocommerce-stores-swift-3/19441661">IOS App</a>
+      <h1>Label WooCommerce Plugin</h1>
+      <p>Author: Anthony Gordon</p>
+      <p>Support: <a href="mailto:support@woosignal.com">support@woosignal.com</a></p>
       <br>
-      - <a href="https://codecanyon.net/item/label-creative-android-app-for-woocommerce-stores-java/20790484">Android App</a>
+      <b>Website</b>
+      <br>
+      - <a href="https://woosignal.com">WooSignal</a>
     </div>
   </div>
 </div>
@@ -128,7 +126,6 @@
     $('#button').click( function () {
       table.row('.selected').remove().draw( false );
     });
-
   });
 
 </script>
