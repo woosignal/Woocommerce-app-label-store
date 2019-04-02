@@ -227,8 +227,6 @@ class ProductDetailViewController: ParentLabelVC, LabelBootstrap {
                 
                 if let mainImgSrc = self.productImages[val].src {
                     if mainImgSrc != "" {
-                        self.activityLoader.startAnimating()
-                        
                         self.ivProdMain.sd_setShowActivityIndicatorView(true)
                         self.ivProdMain.sd_setIndicatorStyle(.gray)
                         self.ivProdMain.sd_setImage(with: URL(string: mainImgSrc))

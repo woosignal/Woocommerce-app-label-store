@@ -48,7 +48,6 @@ class LoginSignUpViewController: ParentLabelVC, LabelBootstrap {
     
     @IBOutlet weak var ivHeaderSignIn: UIImageView!
     @IBOutlet weak var lblHeaderSignInWelcome: UILabel!
-    @IBOutlet weak var lblHeaderSignInMessage: UILabel!
 
     @IBOutlet weak var lblSignInEmail: UILabel!
     @IBOutlet weak var lblSignInPassword: UILabel!
@@ -62,7 +61,6 @@ class LoginSignUpViewController: ParentLabelVC, LabelBootstrap {
     @IBOutlet weak var tfSignUpPassword: UITextField!
     @IBOutlet weak var ivHeaderSignUp: UIImageView!
     @IBOutlet weak var lblHeaderSignUpWelcome: UILabel!
-    @IBOutlet weak var lblHeaderSignUpMessage: UILabel!
     @IBOutlet weak var lblHeaderSignUpEmail: UILabel!
     @IBOutlet weak var lblHeaderSignUpPassword: UILabel!
     @IBOutlet weak var btnTermsPrivacy: UIButton!
@@ -119,14 +117,14 @@ class LoginSignUpViewController: ParentLabelVC, LabelBootstrap {
         // PRIVACY
         pmAlert.addAction(PMAlertAction(title: NSLocalizedString("Privacy Policy.text", comment: "Privacy Policy (Text)"), style: .cancel, action: {
             pmAlert.dismiss(animated: true, completion: {
-                self.performSegue(withIdentifier: "PrivacyPolicySegue", sender: nil)
+                self.performSegue(withIdentifier: "segueWebView", sender: ["type":"privacy"])
             })
         }))
         
         // TERMS
         pmAlert.addAction(PMAlertAction(title: NSLocalizedString("gLE-i6-0Vd.text", comment: "Terms & Conditions (Text)"), style: .cancel, action: {
             pmAlert.dismiss(animated: true, completion: {
-                self.performSegue(withIdentifier: "TermsConditionsSegue", sender: nil)
+                self.performSegue(withIdentifier: "segueWebView", sender: ["type":"terms"])
             })
         }))
         
@@ -246,13 +244,38 @@ class LoginSignUpViewController: ParentLabelVC, LabelBootstrap {
         segue.destination.modalPresentationStyle = .custom
         
         switch segue.identifier ?? "" {
-        case "ViewTermsSegue":
+        case "segueWebView":
             
             transition.sticky = true
             transition.showShadow = true
             transition.panThreshold = 0.2
             transition.transformType = .rotate
-            transition.edge = .bottom
+            transition.edge = .right
+            
+            guard let rqstType = ((sender as! NSDictionary)["type"] as? String) else {
+                return
+            }
+            
+            switch rqstType {
+            case "terms":
+                let destination = segue.destination as! WebViewController
+                destination.titleHeader = NSLocalizedString("gLE-i6-0Vd.text", comment: "Terms & Conditions (Text)")
+                destination.requestUrl = URLRequest(url: labelCore().termsUrl)
+                
+                destination.transitioningDelegate = transition
+                destination.modalPresentationStyle = .custom
+                break
+            case "privacy":
+                let destination = segue.destination as! WebViewController
+                destination.titleHeader = NSLocalizedString("Privacy Policy.text", comment: "Privacy Policy (Text)")
+                destination.requestUrl = URLRequest(url: labelCore().privacyPolicyUrl)
+                
+                destination.transitioningDelegate = transition
+                destination.modalPresentationStyle = .custom
+                break
+            default:
+                break
+            }
             
             break
         case "GettingStartedSegue":
@@ -300,14 +323,12 @@ class LoginSignUpViewController: ParentLabelVC, LabelBootstrap {
     func localizeStrings() {
         // SIGN IN
         self.lblHeaderSignInWelcome.text = NSLocalizedString("ads-Hz-1BS.text", comment: "Welcome (UILabel)")
-        self.lblHeaderSignInMessage.text = NSLocalizedString("snI-Ck-hfC.text", comment: "Sign In With (UILabel)")
         self.lblSignInEmail.text = NSLocalizedString("6cn-o0-PjO.text", comment: "Email (UILabel)")
         self.lblSignInPassword.text = NSLocalizedString("96q-AU-mvk.text", comment: "Password (UILabel)")
         self.btnSignIn.setTitle(NSLocalizedString("FCb-xx-DkY.normalTitle", comment: "Sign In (UIButton))"), for: .normal)
         
         // SIGN UP
         self.lblHeaderSignUpWelcome.text = NSLocalizedString("5wE-bF-U7i.text", comment: "Header Title (UILabel)")
-        self.lblHeaderSignUpMessage.text = NSLocalizedString("hOK-rN-7i0.text", comment: "Sign Up (UILabel)")
         self.lblHeaderSignUpEmail.text = NSLocalizedString("WEq-4u-hKd.text", comment: "Email (UILabel)")
         self.lblHeaderSignUpPassword.text = NSLocalizedString("96q-AU-mvk.text", comment: "Password (UILabel)")
         self.btnSignUp.setTitle(NSLocalizedString("hOK-rN-7i0.text", comment: "Sign Up (UIButton))"), for: .normal)

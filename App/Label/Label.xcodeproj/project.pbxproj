@@ -101,8 +101,8 @@
 		7B9E446F4B891C6FB0046F20 /* Pods_Label.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FAA46B3780FE19D75B23895C /* Pods_Label.framework */; };
 		9298B731214D69C300419712 /* PaymentMethodsTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9298B730214D69C300419712 /* PaymentMethodsTableViewCell.swift */; };
 		92A1554A20B34C61004E34B6 /* UserDefaults.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92A1554920B34C61004E34B6 /* UserDefaults.swift */; };
+		92BBF1A9225377A7008CCA4F /* woosignal_loader.png in Resources */ = {isa = PBXBuildFile; fileRef = 92BBF1A82253779E008CCA4F /* woosignal_loader.png */; };
 		CE3762D31F4849890048124F /* LabelEnums.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE3762D21F4849890048124F /* LabelEnums.swift */; };
-		CE3763141F48B4E40048124F /* LabelIcon.png in Resources */ = {isa = PBXBuildFile; fileRef = CE3763131F48B4E40048124F /* LabelIcon.png */; };
 		CE6454681F4982D3001E55F8 /* ParentLabelVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE6454671F4982D3001E55F8 /* ParentLabelVC.swift */; };
 		DC98ABB61CDFB8D53901CA92 /* Pods_LabelUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A6DBFC406219C77EB8862F77 /* Pods_LabelUITests.framework */; };
 		F62874B21FDD7841000614C2 /* ShippingOrderConfirmationTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F62874B11FDD7841000614C2 /* ShippingOrderConfirmationTableViewCell.swift */; };
@@ -249,10 +249,10 @@
 		5F0A1C0812BFE05BB5097BC7 /* Pods-Label.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Label.debug.xcconfig"; path = "Target Support Files/Pods-Label/Pods-Label.debug.xcconfig"; sourceTree = "<group>"; };
 		9298B730214D69C300419712 /* PaymentMethodsTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentMethodsTableViewCell.swift; sourceTree = "<group>"; };
 		92A1554920B34C61004E34B6 /* UserDefaults.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDefaults.swift; sourceTree = "<group>"; };
+		92BBF1A82253779E008CCA4F /* woosignal_loader.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = woosignal_loader.png; sourceTree = "<group>"; };
 		97024C07CAF5D32660A0DB4B /* Pods-Label.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Label.release.xcconfig"; path = "Target Support Files/Pods-Label/Pods-Label.release.xcconfig"; sourceTree = "<group>"; };
 		A6DBFC406219C77EB8862F77 /* Pods_LabelUITests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_LabelUITests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		CE3762D21F4849890048124F /* LabelEnums.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LabelEnums.swift; sourceTree = "<group>"; };
-		CE3763131F48B4E40048124F /* LabelIcon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = LabelIcon.png; sourceTree = "<group>"; };
 		CE6454671F4982D3001E55F8 /* ParentLabelVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ParentLabelVC.swift; sourceTree = "<group>"; };
 		F62874B11FDD7841000614C2 /* ShippingOrderConfirmationTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShippingOrderConfirmationTableViewCell.swift; sourceTree = "<group>"; };
 		F67089401FA322BB00DC431A /* stViewCustomOne.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = stViewCustomOne.swift; sourceTree = "<group>"; };
@@ -310,7 +310,6 @@
 				5E74CDE1EFDCF0101769FED3 /* Pods-LabelUITests.debug.xcconfig */,
 				1C8DEBAF5DB91C17E71369C7 /* Pods-LabelUITests.release.xcconfig */,
 			);
-			name = Pods;
 			path = Pods;
 			sourceTree = "<group>";
 		};
@@ -571,7 +570,7 @@
 		CE3763121F48B4BF0048124F /* RESOURCES */ = {
 			isa = PBXGroup;
 			children = (
-				CE3763131F48B4E40048124F /* LabelIcon.png */,
+				92BBF1A82253779E008CCA4F /* woosignal_loader.png */,
 			);
 			name = RESOURCES;
 			sourceTree = "<group>";
@@ -758,7 +757,6 @@
 				5555FC191DDE4BC800B30916 /* Stawix - AmsiProCond-Ultra.otf in Resources */,
 				5555FC0E1DDE4BC800B30916 /* Stawix - AmsiProCond-BlackItalic.otf in Resources */,
 				5555FBAE1DDE487600B30916 /* Main.storyboard in Resources */,
-				CE3763141F48B4E40048124F /* LabelIcon.png in Resources */,
 				5555FC1B1DDE4BC800B30916 /* Stawix - AmsiProCond-XLight.otf in Resources */,
 				5555FC161DDE4BC800B30916 /* Stawix - AmsiProCond-SemiBoldItalic.otf in Resources */,
 				5555FC0D1DDE4BC800B30916 /* Stawix - AmsiProCond-Black.otf in Resources */,
@@ -771,6 +769,7 @@
 				5555FC241DDE4BC800B30916 /* Stawix - AmsiProNarw-Regular.otf in Resources */,
 				5555FC291DDE4BC800B30916 /* Stawix - AmsiProNarw-Ultra.otf in Resources */,
 				5555FC121DDE4BC800B30916 /* Stawix - AmsiProCond-Light.otf in Resources */,
+				92BBF1A9225377A7008CCA4F /* woosignal_loader.png in Resources */,
 				5555FC1A1DDE4BC800B30916 /* Stawix - AmsiProCond-UltraItalic.otf in Resources */,
 				5555FBFD1DDE4BC800B30916 /* Stawix - AmsiPro-Black.otf in Resources */,
 			);

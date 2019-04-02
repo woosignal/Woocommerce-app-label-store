@@ -128,6 +128,14 @@ struct labelCore {
     let useShippingVaildation = false
     
     let regexPostcode = Regex("[A-Z]{1,2}[0-9][0-9A-Z]?\\s?[0-9][A-Z]{2}")
+
+    
+    /*<! ------ PASSWORD VAILDATION ------!>*/
+    /**
+     VAILDATION FOR CUSTOMERS SIGNING UP
+     - Change the regex to suit your needs, the example below is for a password that matches 1 uppercase, 6 characters long and 1 number
+     */
+    let regexPassword = Regex("^(((?=.*[a-z])(?=.*[A-Z]))((?=.*[a-z])(?=.*[0-9])))(?=.{6,})")
     
     
     /*<! ------ LOGIN ENABLED ------!>*/
@@ -146,14 +154,6 @@ struct labelCore {
      * REF LINK - https://woosignal.com/docs/ios/labelpro#feature-login
      */
     let useLabelLogin:Bool! = false // SET TRUE/FALSE - LABEL LOGIN FEATURE
-    
-    
-    /*<! ------ PASSWORD VAILDATION ------!>*/
-    /**
-     VAILDATION FOR CUSTOMERS SIGNING UP
-     - Change the regex to suit your needs, the example below is for a password that matches 1 uppercase, 6 characters long and 1 number
-     */
-    let regexPassword = Regex("^(((?=.*[a-z])(?=.*[A-Z]))((?=.*[a-z])(?=.*[0-9])))(?=.{6,})")
     
     
     /*<! ------ DEBUGGER ENABLED ------!>*/
