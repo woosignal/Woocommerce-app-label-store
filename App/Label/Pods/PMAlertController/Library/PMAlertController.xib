@@ -1,25 +1,35 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="11762" systemVersion="16D32" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14460.31" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11757"/>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14460.20"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="PMAlertController" customModule="PMAlertController" customModuleProvider="target">
             <connections>
                 <outlet property="alertActionStackView" destination="WJc-5g-auJ" id="6ho-4f-C1R"/>
+                <outlet property="alertActionStackViewBottomConstraint" destination="P7Y-tt-2D9" id="JA5-K8-NPg"/>
+                <outlet property="alertActionStackViewHeightConstraint" destination="sZH-1X-biu" id="air-m7-rmW"/>
+                <outlet property="alertActionStackViewLeadingConstraint" destination="Qvh-W5-xGk" id="MWM-nd-by1"/>
+                <outlet property="alertActionStackViewTopConstraint" destination="rQm-Go-qos" id="0zz-iC-4rb"/>
+                <outlet property="alertActionStackViewTrailingConstraint" destination="bPd-4c-qNR" id="Lgw-Ed-D7Q"/>
+                <outlet property="alertContentStackView" destination="LMB-jY-4In" id="ezT-4V-FdJ"/>
+                <outlet property="alertContentStackViewLeadingConstraint" destination="JoG-bm-Y31" id="qe7-LF-6uF"/>
+                <outlet property="alertContentStackViewTopConstraint" destination="cZ2-BF-gBn" id="3Fz-vD-bEV"/>
+                <outlet property="alertContentStackViewTrailingConstraint" destination="faR-Xx-08y" id="cir-vE-ibe"/>
                 <outlet property="alertDescription" destination="BaL-rf-G7t" id="oA9-n7-8tS"/>
                 <outlet property="alertImage" destination="Rwc-nf-sc4" id="9c2-Rv-Z2W"/>
                 <outlet property="alertMaskBackground" destination="QvX-0K-co6" id="U8C-Dt-d5N"/>
-                <outlet property="alertStackViewHeightConstraint" destination="sZH-1X-biu" id="air-m7-rmW"/>
                 <outlet property="alertTitle" destination="boW-P6-B3N" id="Q1I-HI-El2"/>
                 <outlet property="alertView" destination="dEl-s8-6vU" id="sSB-hF-osA"/>
                 <outlet property="alertViewWidthConstraint" destination="2KX-8C-U18" id="7hM-KT-GdH"/>
                 <outlet property="headerView" destination="jTz-eN-yAz" id="10g-pC-ZH9"/>
                 <outlet property="headerViewHeightConstraint" destination="mA2-xx-mfB" id="1GQ-Wz-iVX"/>
+                <outlet property="headerViewTopSpaceConstraint" destination="AT5-Y6-bpb" id="vFb-EK-yfz"/>
                 <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
             </connections>
         </placeholder>
@@ -33,7 +43,7 @@
                     <color key="backgroundColor" red="0.3333333432674408" green="0.3333333432674408" blue="0.3333333432674408" alpha="0.14999999999999999" colorSpace="custom" customColorSpace="sRGB"/>
                 </imageView>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="dEl-s8-6vU">
-                    <rect key="frame" x="9" y="174.5" width="357" height="318"/>
+                    <rect key="frame" x="9" y="174.5" width="357" height="318.5"/>
                     <subviews>
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="jTz-eN-yAz" userLabel="Header View">
                             <rect key="frame" x="0.0" y="8" width="357" height="180"/>
@@ -51,28 +61,36 @@
                                 <constraint firstAttribute="trailing" secondItem="Rwc-nf-sc4" secondAttribute="trailing" id="ptn-Q8-BP8"/>
                             </constraints>
                         </view>
-                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="boW-P6-B3N">
-                            <rect key="frame" x="8" y="198" width="341" height="23"/>
-                            <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.0" colorSpace="custom" customColorSpace="sRGB"/>
+                        <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="LMB-jY-4In" userLabel="Alert Content Stack View">
+                            <rect key="frame" x="8" y="198" width="341" height="52.5"/>
+                            <subviews>
+                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text=" " textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="boW-P6-B3N">
+                                    <rect key="frame" x="0.0" y="0.0" width="341" height="23.5"/>
+                                    <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.0" colorSpace="custom" customColorSpace="sRGB"/>
+                                    <constraints>
+                                        <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="21" id="KOt-Js-u7B"/>
+                                    </constraints>
+                                    <fontDescription key="fontDescription" name="Avenir-Roman" family="Avenir" pointSize="17"/>
+                                    <color key="textColor" red="0.92941176469999998" green="0.59607843140000005" blue="0.08235294118" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                    <nil key="highlightedColor"/>
+                                </label>
+                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text=" " textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="BaL-rf-G7t">
+                                    <rect key="frame" x="0.0" y="31.5" width="341" height="21"/>
+                                    <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.0" colorSpace="custom" customColorSpace="sRGB"/>
+                                    <constraints>
+                                        <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="21" id="cg8-6J-yzj"/>
+                                    </constraints>
+                                    <fontDescription key="fontDescription" name="Avenir-Medium" family="Avenir" pointSize="15"/>
+                                    <color key="textColor" red="0.33333333333333331" green="0.33333333333333331" blue="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                    <nil key="highlightedColor"/>
+                                </label>
+                            </subviews>
                             <constraints>
-                                <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="23" id="KOt-Js-u7B"/>
+                                <constraint firstAttribute="height" relation="greaterThanOrEqual" priority="750" id="nMw-wm-Auu"/>
                             </constraints>
-                            <fontDescription key="fontDescription" name="Avenir-Roman" family="Avenir" pointSize="17"/>
-                            <color key="textColor" red="0.92941176469999998" green="0.59607843140000005" blue="0.08235294118" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                            <nil key="highlightedColor"/>
-                        </label>
-                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="BaL-rf-G7t">
-                            <rect key="frame" x="8" y="229" width="341" height="21"/>
-                            <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.0" colorSpace="custom" customColorSpace="sRGB"/>
-                            <constraints>
-                                <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="21" id="cg8-6J-yzj"/>
-                            </constraints>
-                            <fontDescription key="fontDescription" name="Avenir-Medium" family="Avenir" pointSize="15"/>
-                            <color key="textColor" red="0.33333333333333331" green="0.33333333333333331" blue="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                            <nil key="highlightedColor"/>
-                        </label>
+                        </stackView>
                         <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" translatesAutoresizingMaskIntoConstraints="NO" id="WJc-5g-auJ">
-                            <rect key="frame" x="0.0" y="258" width="357" height="60"/>
+                            <rect key="frame" x="0.0" y="258.5" width="357" height="60"/>
                             <constraints>
                                 <constraint firstAttribute="height" constant="60" id="sZH-1X-biu"/>
                             </constraints>
@@ -80,21 +98,18 @@
                     </subviews>
                     <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                     <constraints>
-                        <constraint firstItem="BaL-rf-G7t" firstAttribute="leading" secondItem="dEl-s8-6vU" secondAttribute="leading" constant="8" id="1e4-wO-qFm"/>
                         <constraint firstAttribute="width" constant="357" id="2KX-8C-U18"/>
                         <constraint firstItem="jTz-eN-yAz" firstAttribute="top" secondItem="dEl-s8-6vU" secondAttribute="top" constant="8" id="AT5-Y6-bpb"/>
-                        <constraint firstAttribute="trailing" secondItem="BaL-rf-G7t" secondAttribute="trailing" constant="8" id="DOm-G9-Two"/>
                         <constraint firstAttribute="trailing" secondItem="jTz-eN-yAz" secondAttribute="trailing" id="Ddd-hz-T8q"/>
+                        <constraint firstItem="LMB-jY-4In" firstAttribute="leading" secondItem="dEl-s8-6vU" secondAttribute="leading" constant="8" id="JoG-bm-Y31"/>
                         <constraint firstAttribute="bottom" secondItem="WJc-5g-auJ" secondAttribute="bottom" id="P7Y-tt-2D9"/>
                         <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="100" id="PzO-yc-cQ1"/>
                         <constraint firstItem="WJc-5g-auJ" firstAttribute="leading" secondItem="dEl-s8-6vU" secondAttribute="leading" id="Qvh-W5-xGk"/>
-                        <constraint firstAttribute="trailing" secondItem="boW-P6-B3N" secondAttribute="trailing" constant="8" id="SND-Z1-FOC"/>
-                        <constraint firstItem="boW-P6-B3N" firstAttribute="leading" secondItem="dEl-s8-6vU" secondAttribute="leading" constant="8" id="WdL-bT-Fz2"/>
                         <constraint firstItem="jTz-eN-yAz" firstAttribute="leading" secondItem="dEl-s8-6vU" secondAttribute="leading" id="Xmp-HN-MqT"/>
-                        <constraint firstItem="BaL-rf-G7t" firstAttribute="top" secondItem="boW-P6-B3N" secondAttribute="bottom" constant="8" id="aGA-Q3-kPo"/>
                         <constraint firstAttribute="trailing" secondItem="WJc-5g-auJ" secondAttribute="trailing" id="bPd-4c-qNR"/>
-                        <constraint firstItem="WJc-5g-auJ" firstAttribute="top" secondItem="BaL-rf-G7t" secondAttribute="bottom" constant="8" id="fJD-P4-UWd"/>
-                        <constraint firstItem="boW-P6-B3N" firstAttribute="top" secondItem="jTz-eN-yAz" secondAttribute="bottom" constant="10" id="ig2-Tg-QbJ"/>
+                        <constraint firstItem="LMB-jY-4In" firstAttribute="top" secondItem="jTz-eN-yAz" secondAttribute="bottom" constant="10" id="cZ2-BF-gBn"/>
+                        <constraint firstAttribute="trailing" secondItem="LMB-jY-4In" secondAttribute="trailing" constant="8" id="faR-Xx-08y"/>
+                        <constraint firstItem="WJc-5g-auJ" firstAttribute="top" secondItem="LMB-jY-4In" secondAttribute="bottom" constant="8" id="rQm-Go-qos"/>
                     </constraints>
                 </view>
             </subviews>
@@ -107,6 +122,7 @@
                 <constraint firstAttribute="bottom" secondItem="QvX-0K-co6" secondAttribute="bottom" id="jhD-Oy-cte"/>
                 <constraint firstItem="QvX-0K-co6" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="nbk-z4-Mys"/>
             </constraints>
+            <point key="canvasLocation" x="33.5" y="54.5"/>
         </view>
     </objects>
 </document>

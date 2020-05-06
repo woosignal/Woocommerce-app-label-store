@@ -64,8 +64,9 @@ extension String {
 extension String {
     func convertHtmlSymbols() throws -> String? {
         guard let data = data(using: .utf8) else { return nil }
-        
-        return try NSAttributedString(data: data, options: [NSDocumentTypeDocumentAttribute: NSHTMLTextDocumentType, NSCharacterEncodingDocumentAttribute: String.Encoding.utf8.rawValue], documentAttributes: nil).string
+        print("WWWWHAT??")
+//        return try NSAttributedString(data: data, options: [NSDocumentTypeDocumentAttribute: NSHTMLTextDocumentType, NSCharacterEncodingDocumentAttribute: String.Encoding.utf8.rawValue], documentAttributes: nil).string
+        return "NO HTML HERE"
     }
     
     func substring(_ r: Range<Int>) -> String {

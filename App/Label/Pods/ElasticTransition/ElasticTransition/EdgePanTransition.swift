@@ -34,7 +34,7 @@ public class EdgePanTransition: NSObject, UIViewControllerAnimatedTransitioning,
   var transitioning = false
   var presenting = true
   var interactive = false
-  var transitionContext:UIViewControllerContextTransitioning!
+  weak var transitionContext:UIViewControllerContextTransitioning!
   var container:UIView!
   var size:CGSize{
     return container.bounds.size
@@ -105,7 +105,7 @@ public class EdgePanTransition: NSObject, UIViewControllerAnimatedTransitioning,
     timeoutTimer?.invalidate()
     timeoutTimer = Timer.scheduledTimer(timeInterval: 3.0, target: self, selector: #selector(timedOut), userInfo: nil, repeats: false)
   }
-  func timedOut(){
+  @objc func timedOut(){
     if currentPanGR == nil || currentPanGR!.state != .changed {
       _ = endInteractiveTransition()
     }

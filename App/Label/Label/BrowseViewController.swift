@@ -14,6 +14,7 @@ import UIKit
 import NVActivityIndicatorView
 import Spring
 import ElasticTransition
+import SDWebImage
 
 class BrowseViewController: ParentLabelVC, LabelBootstrap {
 
@@ -218,8 +219,7 @@ extension BrowseViewController: UICollectionViewDelegate, UICollectionViewDataSo
         if let mainImgSrc = activeItems[indexPath.row].image[0].src {
             if mainImgSrc != "" {
                 cell.ivProdMain.contentMode = .scaleAspectFit
-                cell.ivProdMain.sd_setShowActivityIndicatorView(true)
-                cell.ivProdMain.sd_setIndicatorStyle(.gray)
+                cell.ivProdMain.sd_imageIndicator = SDWebImageActivityIndicator.gray
                 cell.ivProdMain.sd_setImage(with: URL(string: mainImgSrc))
             }
         }

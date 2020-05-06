@@ -15,75 +15,81 @@ PODS:
   - PayPal-iOS-SDK/CardIO (2.18.1):
     - CardIO (~> 5.4.1)
   - PayPal-iOS-SDK/Core (2.18.1)
-  - PMAlertController (2.1.3)
-  - SDWebImage (4.4.6):
-    - SDWebImage/Core (= 4.4.6)
-  - SDWebImage/Core (4.4.6)
-  - Spring (1.0.3)
+  - PMAlertController (4.0.0)
+  - SDWebImage (5.7.3):
+    - SDWebImage/Core (= 5.7.3)
+  - SDWebImage/Core (5.7.3)
+  - Spring (1.0.6)
   - Stripe (14.0.0)
-  - SwiftDate (4.3.0)
+  - SwiftDate (6.0.3)
   - SwiftyJSON (4.2.0)
-  - Toast-Swift (3.0.1)
+  - Toast-Swift (5.0.1)
 
 DEPENDENCIES:
   - Alamofire (~> 4.0)
-  - ElasticTransition
+  - ElasticTransition (from `https://github.com/deejeay143/ElasticTransition.git`, branch `master`)
   - GzipSwift
   - Jelly
   - NVActivityIndicatorView
   - PayPal-iOS-SDK
-  - PMAlertController (~> 2.1.3)
-  - SDWebImage (~> 4.0)
-  - Spring (from `https://github.com/MengTo/Spring.git`, branch `swift3`)
+  - PMAlertController
+  - SDWebImage (~> 5.0)
+  - Spring (from `https://github.com/MengTo/Spring.git`, branch `swift5`)
   - Stripe
-  - SwiftDate (~> 4.3.0)
+  - SwiftDate (~> 6.0.0)
   - SwiftyJSON
-  - Toast-Swift (~> 3.0.1)
+  - Toast-Swift (~> 5.0.0)
 
 SPEC REPOS:
-  https://github.com/cocoapods/specs.git:
+  https://github.com/CocoaPods/Specs.git:
     - Alamofire
     - CardIO
-    - ElasticTransition
     - GzipSwift
     - Jelly
-    - MotionAnimation
     - NVActivityIndicatorView
     - PayPal-iOS-SDK
+    - Stripe
+    - SwiftyJSON
+  trunk:
+    - MotionAnimation
     - PMAlertController
     - SDWebImage
-    - Stripe
     - SwiftDate
-    - SwiftyJSON
     - Toast-Swift
 
 EXTERNAL SOURCES:
+  ElasticTransition:
+    :branch: master
+    :git: https://github.com/deejeay143/ElasticTransition.git
   Spring:
-    :branch: swift3
+    :branch: swift5
     :git: https://github.com/MengTo/Spring.git
 
 CHECKOUT OPTIONS:
+  ElasticTransition:
+    :commit: 1b1e312e48397d0104d385c34777ee0136e1dbb0
+    :git: https://github.com/deejeay143/ElasticTransition.git
   Spring:
-    :commit: 8201b5c93bd7ebdf4cd18160bcde1e6e88c2be64
+    :commit: 459b979c4335d4178fb05771019f6dda916f6998
     :git: https://github.com/MengTo/Spring.git
 
 SPEC CHECKSUMS:
   Alamofire: 16ce2c353fb72865124ddae8a57c5942388f4f11
   CardIO: 56983b39b62f495fc6dae9ad7cf875143df06443
-  ElasticTransition: 6c4e4739e32480c864217db912100f3657f6447a
+  ElasticTransition: 72405dae44324293360776bb7f6579cdab428dd4
   GzipSwift: df1636fa095bd8f21d98db14e7393ecc9e230fed
   Jelly: cc6b6a81ed3c476fe0126b10526ee9eb8c98bb45
   MotionAnimation: ff5c8fc2e429d7e10d46ae86819ba9759846c343
   NVActivityIndicatorView: 4ca19fccc84595a78957336a086d00a49be6ce61
   PayPal-iOS-SDK: 10654cd111e911a9807bddb96fae81aacb8e9915
-  PMAlertController: 424dd044c7e55cd318e7a028d3a231e540733115
-  SDWebImage: 3f3f0c02f09798048c47a5ed0a13f17b063572d8
-  Spring: 3f02b5dc3308572ef177b3cad0fa7bbc4b0706f7
+  PMAlertController: 5fad2da8b9eb687134ed50c3462fed12c3afe976
+  SDWebImage: 97351f6582ceca541ea294ba66a1fcb342a331c2
+  Spring: 3d113f14575ef79aec9c5f906dfa4f5001c03254
   Stripe: db29ad197c74aca6fb981e4e8355cf7ebd0fca5a
-  SwiftDate: 64e2312711c5c506f7b51794308ce91f19eb494a
+  SwiftDate: 8d4f14bf1ef68e95094511504856547bf9e3e1a6
   SwiftyJSON: c4bcba26dd9ec7a027fc8eade48e2c911f229e96
-  Toast-Swift: ba0b01b095aada709d915f9beb1d38184a2721c3
+  Toast-Swift: 9b6a70f28b3bf0b96c40d46c0c4b9d6639846711
 
-PODFILE CHECKSUM: fbe87c514e9e951d36330810813d2f60d8ad39da
+PODFILE CHECKSUM: 1a80d91749fb2f1011b501dbcfd6127a52073f14
 
-COCOAPODS: 1.6.0
+COCOAPODS: 1.8.4

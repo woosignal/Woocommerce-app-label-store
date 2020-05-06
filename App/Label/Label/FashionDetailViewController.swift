@@ -180,7 +180,7 @@ class FashionDetailViewController: ParentLabelVC, LabelBootstrap {
             }
         }
         
-        if String(styleStr.characters.suffix(3)) == " / " {
+        if String(styleStr.suffix(3)) == " / " {
             let endIndex = styleStr.index(styleStr.endIndex, offsetBy: -2)
             let truncated = styleStr.substring(to: endIndex)
             styleStr = truncated
@@ -468,12 +468,10 @@ class FashionDetailViewController: ParentLabelVC, LabelBootstrap {
         
         if let mainImgSrc = productImages[0].src {
             if mainImgSrc != "" {
-                self.ivImageDetail.sd_setShowActivityIndicatorView(true)
-                self.ivImageDetail.sd_setIndicatorStyle(.gray)
+                self.ivImageDetail.sd_imageIndicator = SDWebImageActivityIndicator.gray
                 self.ivImageDetail.sd_setImage(with: URL(string: mainImgSrc))
                 
-                self.ivProdMain.sd_setShowActivityIndicatorView(true)
-                self.ivProdMain.sd_setIndicatorStyle(.gray)
+                self.ivProdMain.sd_imageIndicator = SDWebImageActivityIndicator.gray
                 self.ivProdMain.sd_setImage(with: URL(string: mainImgSrc))
             }
         }
@@ -510,7 +508,7 @@ class FashionDetailViewController: ParentLabelVC, LabelBootstrap {
     }
     
     /* < HANDLES SWIPE EVENTS FOR PRODUCT VIEWS > */
-    func handleLeftSwipe(sender:UISwipeGestureRecognizer) {
+    @objc func handleLeftSwipe(sender:UISwipeGestureRecognizer) {
         if prodImageIndx != productImages.count && productImages.count != 0 && prodImageIndx + 1 != productImages.count {
             prodImageIndx = prodImageIndx + 1
             pageControlUpdate(val: prodImageIndx)
@@ -518,7 +516,7 @@ class FashionDetailViewController: ParentLabelVC, LabelBootstrap {
         }
     }
     
-    func handleRightSwipe(sender:UISwipeGestureRecognizer) {
+    @objc func handleRightSwipe(sender:UISwipeGestureRecognizer) {
         if prodImageIndx < productImages.count && prodImageIndx != 0 {
             prodImageIndx = prodImageIndx - 1
             pageControlUpdate(val: prodImageIndx)
@@ -539,12 +537,10 @@ class FashionDetailViewController: ParentLabelVC, LabelBootstrap {
                 
                 if let mainImgSrc = self.productImages[val].src {
                     if mainImgSrc != "" {
-                        self.ivImageDetail.sd_setShowActivityIndicatorView(true)
-                        self.ivImageDetail.sd_setIndicatorStyle(.gray)
+                        self.ivImageDetail.sd_imageIndicator = SDWebImageActivityIndicator.gray
                         self.ivImageDetail.sd_setImage(with: URL(string: mainImgSrc))
                         
-                        self.ivProdMain.sd_setShowActivityIndicatorView(true)
-                        self.ivProdMain.sd_setIndicatorStyle(.gray)
+                        self.ivProdMain.sd_imageIndicator = SDWebImageActivityIndicator.gray
                         self.ivProdMain.sd_setImage(with: URL(string: mainImgSrc))
                     }
                 }
@@ -744,12 +740,12 @@ extension FashionDetailViewController:UIPickerViewDelegate, UIPickerViewDataSour
                 if let mainImgSrc = variation.image.src {
                     if mainImgSrc.range(of:"placeholder.png") == nil {
                         if mainImgSrc != "" {
-                            self.ivImageDetail.sd_setShowActivityIndicatorView(true)
-                            self.ivImageDetail.sd_setIndicatorStyle(.gray)
+                            self.ivImageDetail.sd_imageIndicator = SDWebImageActivityIndicator.gray
+                            
                             self.ivImageDetail.sd_setImage(with: URL(string: mainImgSrc))
                             
-                            self.ivProdMain.sd_setShowActivityIndicatorView(true)
-                            self.ivProdMain.sd_setIndicatorStyle(.gray)
+                            self.ivProdMain.sd_imageIndicator = SDWebImageActivityIndicator.gray
+                            
                             self.ivProdMain.sd_setImage(with: URL(string: mainImgSrc))
                         }
                     }

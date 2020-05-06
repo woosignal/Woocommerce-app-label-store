@@ -98,7 +98,7 @@ extension StatusOrderViewController:UITableViewDelegate, UITableViewDataSource {
         let prodQuantity = oOrder.order.line_items[indexPath.row].quantity
         let prodPrice = oOrder.order.line_items[indexPath.row].subtotal.formatToPrice()
         
-        cell.lblProdInfo.text = "x " + String(prodQuantity!) + " | " + String(prodPrice)!
+        cell.lblProdInfo.text = "x " + String(prodQuantity!) + " | " + String(prodPrice)
         
          // DOWNLOAD IMG
         // DOWNLOAD IMG

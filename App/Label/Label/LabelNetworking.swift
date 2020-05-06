@@ -16,6 +16,7 @@ import PMAlertController
 import Alamofire
 import SwiftyJSON
 import Gzip
+import SDWebImage
 
 // MARK: LABEL WOO REQUESTS
 enum requestType:Int {
@@ -166,8 +167,7 @@ class awCore {
      
      */
     public func getImageFromUrl(imageView:UIImageView, url:String) {
-        imageView.sd_setShowActivityIndicatorView(true)
-        imageView.sd_setIndicatorStyle(.gray)
+        imageView.sd_imageIndicator = SDWebImageActivityIndicator.gray
         imageView.sd_setImage(with: URL(string: url))
     }
     

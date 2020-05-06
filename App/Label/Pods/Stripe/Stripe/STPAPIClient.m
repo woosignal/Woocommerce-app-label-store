@@ -462,11 +462,12 @@ static NSString * const APIEndpointPaymentIntents = @"payment_intents";
 - (NSURLSessionDataTask *)retrieveSourceWithId:(NSString *)identifier clientSecret:(NSString *)secret responseCompletion:(STPAPIResponseBlock)completion {
     NSString *endpoint = [NSString stringWithFormat:@"%@/%@", APIEndpointSources, identifier];
     NSDictionary *parameters = @{@"client_secret": secret};
-    return [STPAPIRequest<STPSource *> getWithAPIClient:self
-                                               endpoint:endpoint
-                                             parameters:parameters
-                                           deserializer:[STPSource new]
-                                             completion:completion];
+    return nil;
+//    return [STPAPIRequest<STPSource *> getWithAPIClient:self
+//                                               endpoint:endpoint
+//                                             parameters:parameters
+//                                           deserializer:[STPSource new]
+//                                             completion:completion];
 }
 
 - (void)startPollingSourceWithId:(NSString *)identifier clientSecret:(NSString *)secret timeout:(NSTimeInterval)timeout completion:(STPSourceCompletionBlock)completion {

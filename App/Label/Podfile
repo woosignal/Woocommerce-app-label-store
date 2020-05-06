@@ -5,16 +5,17 @@ use_frameworks!
 target 'Label' do
   pod 'Stripe'
   pod 'PayPal-iOS-SDK'
-  pod 'PMAlertController', '~> 2.1.3'
+  pod 'PMAlertController'
   pod 'Alamofire', '~> 4.0'
   pod 'SwiftyJSON'
   pod 'NVActivityIndicatorView'
-  pod 'Spring', :git => 'https://github.com/MengTo/Spring.git', :branch => 'swift3'
+  pod 'Spring', :git => 'https://github.com/MengTo/Spring.git', :branch => 'swift5'
+  # pod 'MotionAnimation', :git => 'https://github.com/cristipetra/MotionAnimation.git', :branch => 'swift4'
   pod 'Jelly'
-  pod 'ElasticTransition'
-  pod 'Toast-Swift', '~> 3.0.1'
-  pod 'SDWebImage', '~> 4.0'
-  pod 'SwiftDate', '~> 4.3.0'
+  pod 'ElasticTransition', :git => 'https://github.com/deejeay143/ElasticTransition.git', :branch => 'master'
+  pod 'Toast-Swift', '~> 5.0.0'
+  pod 'SDWebImage', '~> 5.0'
+  pod 'SwiftDate', '~> 6.0.0'
   pod 'GzipSwift'
 
   target 'LabelUITests' do

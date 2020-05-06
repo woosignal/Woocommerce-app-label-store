@@ -254,7 +254,7 @@ extension CartViewController:UICollectionViewDataSource, UICollectionViewDelegat
         return CGSize(width: self.view.frame.width - 30, height: 230)
     }
     
-    func updateCartQuantity(sender:UIStepper) {
+    @objc func updateCartQuantity(sender:UIStepper) {
         let cellIndx = sender.tag
         
         if Int(sender.value) != 0 {
@@ -272,7 +272,7 @@ extension CartViewController:UICollectionViewDataSource, UICollectionViewDelegat
         }
     }
     
-    func removeCart(sender:UIButton) {
+    @objc func removeCart(sender:UIButton) {
         sDefaults().removeFromBasket(index: sender.tag)
         self.basket = getBasket()
         self.CartCollectionView.reloadData()

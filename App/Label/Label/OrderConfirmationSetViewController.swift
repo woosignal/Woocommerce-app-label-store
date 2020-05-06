@@ -634,9 +634,10 @@ class OrderConfirmationSetViewController: ParentLabelVC, LabelBootstrap {
         if Stripe.canSubmitPaymentRequest(request) {
             
             let paymentAuthorizationViewController = PKPaymentAuthorizationViewController(paymentRequest: request)
-            paymentAuthorizationViewController.delegate = self
-            
-            present(paymentAuthorizationViewController, animated: true)
+            paymentAuthorizationViewController?.delegate = self
+            if let paymentAuthorizationViewController = paymentAuthorizationViewController {
+                present(paymentAuthorizationViewController, animated: true)
+            }
         } else {
             self.present(LabelAlerts().openDefaultError(), animated: true, completion: nil)
             LabelLog().output(log: "Check LabelCore conf, problem with Apple Pay configuration")
@@ -1300,13 +1301,19 @@ extension OrderConfirmationSetViewController: UITableViewDelegate, UITableViewDa
         if tax.country == getCodeForCounty(setCountry: self.oShippingAddress.country) {
             switch self.activeMethod!.methodId {
             case "flat_rate":
-                return String(((((Double(self.oAwCore.woItemSubtotal(basketItem: item)))! + (Double(self.activeMethod!.flatRateShipping.shippingTotal) ?? 0)) * (Double(tax.rate) ?? 0))) / 100)
+                let d = Double(self.oAwCore.woItemSubtotal(basketItem: item))
+                let d2 = (Double(self.activeMethod!.flatRateShipping.shippingTotal) ?? 0)
+                let r = ((((d ?? 0) + d2) * (Double(tax.rate) ?? 0))) / 100
+                return String(r)
                 
             case "free_shipping":
                 return String((((Double(self.oAwCore.woItemSubtotal(basketItem: item)))! * (Double(tax.rate) ?? 0))) / 100)
                 
             case "local_pickup":
-                return String(((((Double(self.oAwCore.woItemSubtotal(basketItem: item)))! + (Double(self.activeMethod!.localPickupShipping.settingCost.value) ?? 0)) * (Double(tax.rate) ?? 0))) / 100)
+                let d = Double(self.oAwCore.woItemSubtotal(basketItem: item))
+                let d2 = Double(self.activeMethod!.localPickupShipping.settingCost.value) ?? 0
+                let r = ((((d ?? 0) + d2) * (Double(tax.rate) ?? 0))) / 100
+                return String(r)
             default:
                 return "0"
                 
