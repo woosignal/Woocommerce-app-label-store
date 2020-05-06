@@ -179,13 +179,12 @@ class ProductDetailViewController: ParentLabelVC, LabelBootstrap {
         if let mainImgSrc = productImages[0].src {
             if mainImgSrc != "" {
                 self.ivProdMain.contentMode = .scaleAspectFit
-                self.ivProdMain.sd_setShowActivityIndicatorView(true)
-                self.ivProdMain.sd_setIndicatorStyle(.gray)
+                self.ivProdMain.sd_imageIndicator = SDWebImageActivityIndicator.gray
+                
                 self.ivProdMain.sd_setImage(with: URL(string: mainImgSrc))
                 
                 self.ivImageDetail.contentMode = .scaleAspectFit
-                self.ivImageDetail.sd_setShowActivityIndicatorView(true)
-                self.ivImageDetail.sd_setIndicatorStyle(.gray)
+                self.ivImageDetail.sd_imageIndicator = SDWebImageActivityIndicator.gray
                 self.ivImageDetail.sd_setImage(with: URL(string: mainImgSrc))
                 
             }
@@ -198,7 +197,7 @@ class ProductDetailViewController: ParentLabelVC, LabelBootstrap {
     }
     
     /* < HANDLES SWIPE EVENTS FOR PRODUCT VIEWS > */
-    func handleLeftSwipe(sender:UISwipeGestureRecognizer) {
+    @objc func handleLeftSwipe(sender:UISwipeGestureRecognizer) {
         if prodImageIndx != productImages.count && productImages.count != 0 && prodImageIndx + 1 != productImages.count {
             prodImageIndx = prodImageIndx + 1
             pageControlUpdate(val: prodImageIndx)
@@ -206,7 +205,7 @@ class ProductDetailViewController: ParentLabelVC, LabelBootstrap {
         }
     }
     
-    func handleRightSwipe(sender:UISwipeGestureRecognizer) {
+    @objc func handleRightSwipe(sender:UISwipeGestureRecognizer) {
         if prodImageIndx < productImages.count && prodImageIndx != 0 {
             prodImageIndx = prodImageIndx - 1
             pageControlUpdate(val: prodImageIndx)
@@ -227,12 +226,10 @@ class ProductDetailViewController: ParentLabelVC, LabelBootstrap {
                 
                 if let mainImgSrc = self.productImages[val].src {
                     if mainImgSrc != "" {
-                        self.ivProdMain.sd_setShowActivityIndicatorView(true)
-                        self.ivProdMain.sd_setIndicatorStyle(.gray)
+                        self.ivProdMain.sd_imageIndicator = SDWebImageActivityIndicator.gray
                         self.ivProdMain.sd_setImage(with: URL(string: mainImgSrc))
                         
-                        self.ivImageDetail.sd_setShowActivityIndicatorView(true)
-                        self.ivImageDetail.sd_setIndicatorStyle(.gray)
+                        self.ivImageDetail.sd_imageIndicator = SDWebImageActivityIndicator.gray
                         self.ivImageDetail.sd_setImage(with: URL(string: mainImgSrc))
                     }
                 }

@@ -3,7 +3,7 @@
 //  PMAlertController
 //
 //  Created by Paolo Musolino on 07/05/16.
-//  Copyright © 2016 Codeido. All rights reserved.
+//  Copyright © 2018 Codeido. All rights reserved.
 //
 
 import UIKit
@@ -33,11 +33,11 @@ import UIKit
         self.action = action
         self.addTarget(self, action: #selector(PMAlertAction.tapped(_:)), for: .touchUpInside)
         
-        self.setTitle(title, for: UIControlState())
+        self.setTitle(title, for: UIControl.State())
         self.titleLabel?.font = UIFont(name: "Avenir-Heavy", size: 17)
         
         self.actionStyle = style
-        style == .default ? (self.setTitleColor(UIColor(red: 191.0/255.0, green: 51.0/255.0, blue: 98.0/255.0, alpha: 1.0), for: UIControlState())) : (self.setTitleColor(UIColor.gray, for: UIControlState()))
+        style == .default ? (self.setTitleColor(UIColor(red: 191.0/255.0, green: 51.0/255.0, blue: 98.0/255.0, alpha: 1.0), for: UIControl.State())) : (self.setTitleColor(UIColor.gray, for: UIControl.State()))
         
         self.addSeparator()
     }
@@ -47,7 +47,10 @@ import UIKit
     }
     
     @objc func tapped(_ sender: PMAlertAction) {
-        self.action?()
+        //Action need to be fired after alert dismiss
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) { [weak self] in
+            self?.action?()
+        }
     }
     
     @objc fileprivate func addSeparator(){

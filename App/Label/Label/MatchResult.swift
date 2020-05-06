@@ -66,7 +66,7 @@ public struct MatchResult {
   private let _string: String
 
   internal init(_ string: String, _ result: NSTextCheckingResult) {
-    self._result = _MatchResult(string.utf16, result)
+    self._result = _MatchResult(string, result)
     self._string = string
   }
 
@@ -75,7 +75,7 @@ public struct MatchResult {
 // Use of a private class allows for lazy vars without the need for `mutating`.
 private final class _MatchResult {
 
-  private let string: String.UTF16View
+  private let string: String
 #if swift(>=3.0)
   fileprivate let result: NSTextCheckingResult
 #else
@@ -83,18 +83,18 @@ private final class _MatchResult {
 #endif
 
 #if swift(>=3.0)
-  fileprivate init(_ string: String.UTF16View, _ result: NSTextCheckingResult) {
+  fileprivate init(_ string: String, _ result: NSTextCheckingResult) {
     self.string = string
     self.result = result
   }
 #else
-  private init(_ string: String.UTF16View, _ result: NSTextCheckingResult) {
+  private init(_ string: String, _ result: NSTextCheckingResult) {
     self.string = string
     self.result = result
   }
 #endif
 
-  lazy var range: Range<String.UTF16Index> = {
+    lazy var range: Range<String.Index> = {
     return self.rangeFromNSRange(self.string, self.result.range)!
   }()
 
@@ -102,7 +102,7 @@ private final class _MatchResult {
     return self.captureRanges.map { $0.map { self.substringFromRange(self.string, $0) } }
   }()
 
-  lazy var captureRanges: [Range<String.UTF16Index>?] = {
+  lazy var captureRanges: [Range<String.Index>?] = {
     return self.result.ranges.dropFirst().map { self.rangeFromNSRange(self.string, $0) }
   }()
 
@@ -110,11 +110,11 @@ private final class _MatchResult {
     return self.substringFromRange(self.string, self.rangeFromNSRange(self.string, self.result.range)!)
   }()
 
-  private let rangeFromNSRange: (String.UTF16View, NSRange) -> Range<String.UTF16Index>? = { string, range in
+  private let rangeFromNSRange: (String, NSRange) -> Range<String.Index>? = { string, range in
     guard range.location != NSNotFound else { return nil }
 #if swift(>=3.0)
-    let start = string.startIndex.advanced(by: range.location)
-    let end = start.advanced(by: range.length)
+    let start = string.index(string.startIndex, offsetBy: range.location)
+    let end = string.index(string.startIndex, offsetBy: range.length)
 #else
     let start = string.startIndex.advancedBy(range.location)
     let end = start.advancedBy(range.length)
@@ -122,8 +122,8 @@ private final class _MatchResult {
     return start..<end
   }
 
-  private let substringFromRange: (String.UTF16View, Range<String.UTF16Index>) -> String = { string, range in
-    return string[range].description
+  private let substringFromRange: (String, Range<String.Index>) -> String = { string, range in
+    return String(string[range.lowerBound..<range.upperBound])
   }
 
 }
